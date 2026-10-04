@@ -1,0 +1,36 @@
+unit frmCadastroOS;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+
+type
+  TTFormCadastroOS = class(TForm)
+    btnAdicionarFoto: TButton;
+    procedure btnAdicionarFotoClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormCadastroOS: TFormCadastroOS;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFormCadastroOS.btnAdicionarFotoClick(Sender: TObject);
+  begin
+    if OpenPictureDialog1.Execute then
+    begin
+      // Carrega na tela para o usuário ver
+      Image1.Picture.LoadFromFile(OpenPictureDialog1.FileName);
+    end;
+  end;
+
+
+end.
