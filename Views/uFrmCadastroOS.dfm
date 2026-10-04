@@ -1,9 +1,9 @@
-object FormCadastroOS: TFormCadastroOS
+object FrmCadastroOS: TFrmCadastroOS
   Left = 0
   Top = 0
-  Caption = 'FormCadastroOS'
-  ClientHeight = 443
-  ClientWidth = 670
+  Caption = 'FrmCadastroOS'
+  ClientHeight = 490
+  ClientWidth = 725
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,23 +19,9 @@ object FormCadastroOS: TFormCadastroOS
     Width = 177
     Height = 161
   end
-  object lbDescricao: TLabel
-    Left = 392
-    Top = 269
-    Width = 55
-    Height = 15
-    Caption = 'Descri'#231#227'o:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = 15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    OnClick = lbDescricaoClick
-  end
   object lbDataEnt: TLabel
     Left = 268
-    Top = 166
+    Top = 102
     Width = 93
     Height = 15
     Caption = 'Data de Entrada:'
@@ -45,11 +31,10 @@ object FormCadastroOS: TFormCadastroOS
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    OnClick = lbDescricaoClick
   end
   object lbDataPrev: TLabel
-    Left = 452
-    Top = 166
+    Left = 471
+    Top = 105
     Width = 44
     Height = 15
     Caption = 'Previs'#227'o'
@@ -59,31 +44,13 @@ object FormCadastroOS: TFormCadastroOS
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    OnClick = lbDescricaoClick
   end
   object LabCliente: TLabel
     Left = 268
-    Top = 71
+    Top = 39
     Width = 37
     Height = 13
     Caption = 'Cliente:'
-    OnClick = LabClienteClick
-  end
-  object LabQntdeUnidMed: TLabel
-    Left = 458
-    Top = 72
-    Width = 26
-    Height = 13
-    Caption = 'Item:'
-    OnClick = LabQntdeUnidMedClick
-  end
-  object lbQntd: TLabel
-    Left = 567
-    Top = 72
-    Width = 24
-    Height = 13
-    Caption = 'Qntd'
-    OnClick = LabQntdeUnidMedClick
   end
   object btnAdicionarFoto: TButton
     Left = 32
@@ -100,23 +67,20 @@ object FormCadastroOS: TFormCadastroOS
     TabOrder = 0
     OnClick = btnAdicionarFotoClick
   end
-  object edtDescricao: TEdit
-    Left = 268
-    Top = 290
-    Width = 304
-    Height = 119
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = 15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 1
-    TextHint = 'Descreva o problema...'
-  end
   object edtDataEnt: TMaskEdit
     Left = 268
-    Top = 187
+    Top = 123
+    Width = 120
+    Height = 23
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 1
+    Text = '  /  /    '
+    Visible = False
+  end
+  object edtDataPrev: TMaskEdit
+    Left = 471
+    Top = 123
     Width = 120
     Height = 23
     EditMask = '!99/99/0000;1;_'
@@ -125,29 +89,19 @@ object FormCadastroOS: TFormCadastroOS
     Text = '  /  /    '
     Visible = False
   end
-  object edtDataPrev: TMaskEdit
-    Left = 452
-    Top = 184
-    Width = 120
-    Height = 23
-    EditMask = '!99/99/0000;1;_'
-    MaxLength = 10
-    TabOrder = 3
-    Text = '  /  /    '
-    Visible = False
-  end
-  object cbxCategoria: TDBLookupComboBox
+  object cbxCliente: TDBLookupComboBox
     Left = 268
-    Top = 92
+    Top = 60
     Width = 139
     Height = 21
+    DataSource = dmPrincipal.dsCliente
     KeyField = 'ID'
     ListField = 'NOME'
-    TabOrder = 4
+    TabOrder = 3
   end
   object btnAddCliente: TButton
     Left = 311
-    Top = 71
+    Top = 39
     Width = 41
     Height = 15
     Caption = '+ add'
@@ -157,39 +111,134 @@ object FormCadastroOS: TFormCadastroOS
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
+    TabOrder = 4
+    OnClick = btnAddClienteClick
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 431
+    Width = 725
+    Height = 59
+    Align = alBottom
     TabOrder = 5
+    ExplicitTop = 384
+    ExplicitWidth = 670
+    object BtnSalvar: TButton
+      Left = 56
+      Top = 14
+      Width = 97
+      Height = 35
+      Caption = 'Salvar'
+      Default = True
+      TabOrder = 0
+      OnClick = BtnSalvarClick
+    end
+    object BtnCancelar: TButton
+      Left = 517
+      Top = 14
+      Width = 97
+      Height = 35
+      Cancel = True
+      Caption = 'Cancelar'
+      TabOrder = 1
+    end
   end
-  object edtQntd: TEdit
-    Left = 567
-    Top = 90
-    Width = 47
-    Height = 23
-    Hint = '0'
-    Enabled = False
+  object Panel2: TPanel
+    Left = 0
+    Top = 224
+    Width = 725
+    Height = 207
+    Align = alBottom
+    Caption = 'Panel2'
     TabOrder = 6
-    Text = '0'
+    object lbDescricao: TLabel
+      Left = 84
+      Top = 21
+      Width = 55
+      Height = 15
+      Caption = 'Descri'#231#227'o:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = 15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edtDescricao: TEdit
+      Left = 16
+      Top = 40
+      Width = 217
+      Height = 161
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = 15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      TextHint = 'Descreva o servi'#231'o...'
+      OnChange = edtDescricaoChange
+    end
+    object LsvMovimentacoes: TListView
+      Left = 260
+      Top = 56
+      Width = 430
+      Height = 145
+      Columns = <
+        item
+          Caption = 'Descri'#231#227'o'
+        end
+        item
+          Caption = 'Valor Unit'#225'rio'
+        end
+        item
+          Caption = 'Quantidade'
+        end>
+      TabOrder = 1
+      ViewStyle = vsReport
+    end
+    object edtDescricaoItem: TEdit
+      Left = 260
+      Top = 21
+      Width = 121
+      Height = 21
+      TabOrder = 2
+      TextHint = 'Descri'#231#227'o...'
+    end
+    object edtQntd: TEdit
+      Left = 502
+      Top = 21
+      Width = 121
+      Height = 21
+      NumbersOnly = True
+      TabOrder = 3
+      TextHint = 'Quantidade...'
+    end
+    object edtValor: TEdit
+      Left = 384
+      Top = 21
+      Width = 116
+      Height = 21
+      TabOrder = 4
+      TextHint = 'Valor Unit'#225'rio'
+    end
   end
-  object cbxItem: TDBLookupComboBox
-    Left = 458
-    Top = 91
-    Width = 103
+  object btnAdicionarItem: TButton
+    Left = 630
+    Top = 245
+    Width = 60
     Height = 21
-    KeyField = 'ID'
-    ListField = 'SIGLA'
-    TabOrder = 7
-  end
-  object btnAddUnidMed: TButton
-    Left = 490
-    Top = 72
-    Width = 41
-    Height = 15
     Caption = '+ add'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -9
+    Font.Height = -12
     Font.Name = 'Segoe UI'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 7
+    OnClick = btnAddClienteClick
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    Top = 160
   end
 end

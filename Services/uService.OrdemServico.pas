@@ -3,7 +3,7 @@ unit uService.OrdemServico;
 interface
 
 uses
-  System.SysUtils, FireDAC.Comp.Client, Data.DB, uModel.Classes;
+  System.SysUtils, FireDAC.Comp.Client, Data.DB, uModel.Classes, System.Classes;
 
 type
   TOrdemServicoService = class
@@ -12,6 +12,8 @@ type
     function Atualizar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
     function Deletar(IDOrdem: Integer; Conexao: TFDConnection): Boolean;
     function RetornarOrdem(IDOrdem: Integer; Conexao: TFDConnection): TOrdemServico;
+    function SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
+    function RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
   end;
 
 implementation
@@ -40,11 +42,10 @@ begin
       qrSalvar.ParamByName('pDescricao').AsString := Ordem.DescricaoProblema;
       qrSalvar.ParamByName('pValorTotal').AsCurrency := Ordem.ValorTotal;
 
-      qrSalvar.Open; // Open usado devido à cláusula RETURNING
+      qrSalvar.Open;
       Ordem.Id := qrSalvar.FieldByName('ID').AsInteger;
       qrSalvar.Close;
 
-      // Inserção dos Itens da Ordem
       qrSalvar.SQL.Text :=
         'INSERT INTO ITEM_ORDEM (ORDEM_ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO) ' +
         'VALUES (:pOrdemId, :pDescricaoItem, :pQuantidade, :pValorUnitario)';
@@ -57,6 +58,40 @@ begin
         qrSalvar.ParamByName('pValorUnitario').AsCurrency := Item.ValorUnitario;
         qrSalvar.ExecSQL;
       end;
+
+      Conexao.Commit;
+      Result := True;
+    except
+      Conexao.Rollback;
+      Result := False;
+    end;
+  finally
+    qrSalvar.Free;
+  end;
+end;
+
+function TOrdemServicoService.SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
+var
+  qrSalvar: TFDQuery;
+begin
+  qrSalvar := TFDQuery.Create(nil);
+  try
+    qrSalvar.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      qrSalvar.SQL.Text :=
+        'INSERT INTO CLIENTE (NOME, DOCUMENTO, EMAIL, TELEFONE) ' +
+        'VALUES (:pNome, :pDocumento, :pEmail, :pTelefone) ' +
+        'RETURNING ID';
+
+      qrSalvar.ParamByName('pNome').AsString := Cliente.Nome;
+      qrSalvar.ParamByName('pDocumento').AsString := Cliente.Documento;
+      qrSalvar.ParamByName('pEmail').AsString := Cliente.Email;
+      qrSalvar.ParamByName('pTelefone').AsString := Cliente.Telefone;
+
+      qrSalvar.Open;
+      Cliente.Id := qrSalvar.FieldByName('ID').AsInteger;
+      qrSalvar.Close;
 
       Conexao.Commit;
       Result := True;
@@ -84,8 +119,15 @@ begin
         'UPDATE ORDEM_SERVICO SET ' +
         'CLIENTE_ID = :pClienteId, DATA_ABERTURA = :pDataAber, DATA_PREVISTA = :pDataPrev, ' +
         'DATA_FECHAMENTO = :pDataFech, STATUS = :pStatus, DESCRICAO_PROBLEMA = :pDescricao, ' +
-        'VALOR_TOTAL = :pValorTotal WHERE ID = :pID';
+        'VALOR_TOTAL = :pValorTotal, FOTO = :pFoto WHERE ID = :pID';
 
+      if Ordem.Imagem.Size > 0 then
+        begin
+          Ordem.Imagem.Position := 0; // Volta o ponteiro para o início da leitura
+          qrAtualizar.ParamByName('pFoto').LoadFromStream(Ordem.Imagem, ftBlob);
+        end
+        else
+          qrAtualizar.ParamByName('pFoto').Clear;
       qrAtualizar.ParamByName('pID').AsInteger := Ordem.Id;
       qrAtualizar.ParamByName('pClienteId').AsInteger := Ordem.Cliente.Id;
       qrAtualizar.ParamByName('pDataAber').AsDate := Ordem.DataAbertura;
@@ -134,6 +176,7 @@ var
   qrRetorno: TFDQuery;
   FOrdem: TOrdemServico;
   FItem: TItemOrdem;
+  StreamBanco: TStream;
 begin
   qrRetorno := TFDQuery.Create(nil);
   try
@@ -160,6 +203,15 @@ begin
       FOrdem.Status := qrRetorno.FieldByName('STATUS').AsString;
       FOrdem.DescricaoProblema := qrRetorno.FieldByName('DESCRICAO_PROBLEMA').AsString;
       FOrdem.ValorTotal := qrRetorno.FieldByName('VALOR_TOTAL').AsCurrency;
+      if not qrRetorno.FieldByName('FOTO').IsNull then
+        begin
+          StreamBanco := qrRetorno.CreateBlobStream(qrRetorno.FieldByName('FOTO'), bmRead);
+          try
+            FOrdem.Imagem.LoadFromStream(StreamBanco);
+          finally
+            StreamBanco.Free;
+          end;
+        end;
     end;
     qrRetorno.Close;
 
@@ -210,6 +262,31 @@ begin
     end;
   finally
     qrDeletar.Free;
+  end;
+end;
+
+function TOrdemServicoService.RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
+var
+  qrNumOS: TFDQuery;
+begin
+  qrNumOS := TFDQuery.Create(Nil);
+  try
+    qrNumOS.Connection := Conexao;
+    qrNumOS.SQL.Text := 'SELECT COUNT(ID) as Contador FROM ORDEM_SERVICO WHERE CLIENTE_ID = :pID';
+
+    Conexao.StartTransaction;
+    try
+      qrNumOS.ParamByName('pID').AsInteger := IDCliente;
+      qrNumOS.Open;
+      Conexao.Commit;
+
+      Result := qrNumOS.FieldByName('Contador').AsInteger;
+    except
+      Conexao.Rollback;
+      Result := 0;
+    end;
+  finally
+    qrNumOS.Free;
   end;
 end;
 

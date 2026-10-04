@@ -8,13 +8,24 @@ uses
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
   FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, System.ImageList, Vcl.ImgList,
   Vcl.VirtualImageList, Vcl.BaseImageCollection, Vcl.ImageCollection, Data.DB,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.DataSet;
 
 type
-  TDataModule1 = class(TDataModule)
+  TdmPrincipal = class(TDataModule)
     ConexaoBanco: TFDConnection;
     BancoImanges: TImageCollection;
     ListaImagens: TVirtualImageList;
+    qrListaOS: TFDQuery;
+    dsListaOS: TDataSource;
+    qrCliente: TFDQuery;
+    dsCliente: TDataSource;
+    qrListaOSID: TIntegerField;
+    qrListaOSDATA_ABERTURA: TDateField;
+    qrListaOSSTATUS: TWideStringField;
+    qrListaOSVALOR_TOTAL: TFMTBCDField;
+    qrListaOSNOME_CLIENTE: TWideStringField;
+    procedure dsClienteDataChange(Sender: TObject; Field: TField);
   private
     { Private declarations }
   public
@@ -22,12 +33,14 @@ type
   end;
 
 var
-  DataModule1: TDataModule1;
+  dmPrincipal: TdmPrincipal;
 
 implementation
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+
 
 end.

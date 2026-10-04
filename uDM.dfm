@@ -1,4 +1,4 @@
-object DataModule1: TDataModule1
+object dmPrincipal: TdmPrincipal
   OldCreateOrder = False
   Height = 466
   Width = 587
@@ -8,6 +8,7 @@ object DataModule1: TDataModule1
       'Password=masterkey'
       'Database=C:\Users\leand\Desktop\novaselecao\ORDENS.FDB'
       'DriverID=FB')
+    Connected = True
     Left = 80
     Top = 48
   end
@@ -4990,5 +4991,65 @@ object DataModule1: TDataModule1
     Height = 30
     Left = 512
     Top = 216
+  end
+  object qrListaOS: TFDQuery
+    Active = True
+    Connection = ConexaoBanco
+    SQL.Strings = (
+      
+        'SELECT '#10'  OS.ID,'#10'  OS.DATA_ABERTURA,'#10'  OS.STATUS,'#10'  OS.VALOR_TOT' +
+        'AL,'#10'  C.NOME AS NOME_CLIENTE'#10'FROM ORDEM_SERVICO OS'#10'INNER JOIN CL' +
+        'IENTE C ON (OS.CLIENTE_ID = C.ID)')
+    Left = 312
+    Top = 416
+    object qrListaOSID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qrListaOSDATA_ABERTURA: TDateField
+      FieldName = 'DATA_ABERTURA'
+      Origin = 'DATA_ABERTURA'
+      Required = True
+    end
+    object qrListaOSSTATUS: TWideStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+      Size = 15
+    end
+    object qrListaOSVALOR_TOTAL: TFMTBCDField
+      FieldName = 'VALOR_TOTAL'
+      Origin = 'VALOR_TOTAL'
+      Precision = 18
+      Size = 2
+    end
+    object qrListaOSNOME_CLIENTE: TWideStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'NOME_CLIENTE'
+      Origin = 'NOME'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 120
+    end
+  end
+  object dsListaOS: TDataSource
+    DataSet = qrListaOS
+    Left = 312
+    Top = 360
+  end
+  object qrCliente: TFDQuery
+    Connection = ConexaoBanco
+    SQL.Strings = (
+      'select * from Cliente')
+    Left = 24
+    Top = 408
+  end
+  object dsCliente: TDataSource
+    DataSet = qrCliente
+    OnDataChange = dsClienteDataChange
+    Left = 24
+    Top = 352
   end
 end
