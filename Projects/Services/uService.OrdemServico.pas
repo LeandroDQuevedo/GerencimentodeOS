@@ -1,0 +1,362 @@
+unit uService.OrdemServico;
+
+interface
+
+uses
+  System.SysUtils, FireDAC.Comp.Client, Data.DB, uModel.Classes, System.Classes;
+
+type
+  TOrdemServicoService = class
+  public
+    function Salvar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
+    function Atualizar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
+    function Deletar(IDOrdem: Integer; Conexao: TFDConnection): Boolean;
+    function RetornarOrdem(IDOrdem: Integer; Conexao: TFDConnection): TOrdemServico;
+    function SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
+    function RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
+    function CarregarPorId(ID: Integer; Conexao: TFDConnection): TOrdemServico;
+  end;
+
+implementation
+
+function TOrdemServicoService.Salvar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
+var
+  qrSalvar: TFDQuery;
+  Item: TItemOrdem;
+begin
+  qrSalvar := TFDQuery.Create(nil);
+  try
+    qrSalvar.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      // Inserção da Ordem de Serviço com captura do ID gerado
+      qrSalvar.SQL.Text :=
+        'INSERT INTO ORDEM_SERVICO (CLIENTE_ID, DATA_ABERTURA, DATA_PREVISTA, ' +
+        'STATUS, DESCRICAO_PROBLEMA, VALOR_TOTAL) ' +
+        'VALUES (:pClienteId, :pDataAber, :pDataPrev, :pStatus, :pDescricao, :pValorTotal) ' +
+        'RETURNING ID';
+
+      qrSalvar.ParamByName('pClienteId').AsInteger := Ordem.Cliente.Id;
+      qrSalvar.ParamByName('pDataAber').AsDate := Ordem.DataAbertura;
+      qrSalvar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
+      qrSalvar.ParamByName('pStatus').AsString := Ordem.Status;
+      qrSalvar.ParamByName('pDescricao').AsString := Ordem.DescricaoProblema;
+      qrSalvar.ParamByName('pValorTotal').AsCurrency := Ordem.ValorTotal;
+
+      qrSalvar.Open;
+      Ordem.Id := qrSalvar.FieldByName('ID').AsInteger;
+      qrSalvar.Close;
+
+      qrSalvar.SQL.Text :=
+        'INSERT INTO ITEM_ORDEM (ORDEM_ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO) ' +
+        'VALUES (:pOrdemId, :pDescricaoItem, :pQuantidade, :pValorUnitario)';
+
+      for Item in Ordem.Itens do
+      begin
+        qrSalvar.ParamByName('pOrdemId').AsInteger := Ordem.Id;
+        qrSalvar.ParamByName('pDescricaoItem').AsString := Item.Descricao;
+        qrSalvar.ParamByName('pQuantidade').AsFloat := Item.Quantidade;
+        qrSalvar.ParamByName('pValorUnitario').AsCurrency := Item.ValorUnitario;
+        qrSalvar.ExecSQL;
+      end;
+
+      Conexao.Commit;
+      Result := True;
+    except
+      Conexao.Rollback;
+      Result := False;
+    end;
+  finally
+    qrSalvar.Free;
+  end;
+end;
+
+function TOrdemServicoService.SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
+var
+  qrSalvar: TFDQuery;
+begin
+  qrSalvar := TFDQuery.Create(nil);
+  try
+    qrSalvar.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      qrSalvar.SQL.Text :=
+        'INSERT INTO CLIENTE (NOME, DOCUMENTO, EMAIL, TELEFONE) ' +
+        'VALUES (:pNome, :pDocumento, :pEmail, :pTelefone) ' +
+        'RETURNING ID';
+
+      qrSalvar.ParamByName('pNome').AsString := Cliente.Nome;
+      qrSalvar.ParamByName('pDocumento').AsString := Cliente.Documento;
+      qrSalvar.ParamByName('pEmail').AsString := Cliente.Email;
+      qrSalvar.ParamByName('pTelefone').AsString := Cliente.Telefone;
+
+      qrSalvar.Open;
+      Cliente.Id := qrSalvar.FieldByName('ID').AsInteger;
+      qrSalvar.Close;
+
+      Conexao.Commit;
+      Result := True;
+    except
+      Conexao.Rollback;
+      Result := False;
+    end;
+  finally
+    qrSalvar.Free;
+  end;
+end;
+
+function TOrdemServicoService.Atualizar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
+var
+  qrAtualizar: TFDQuery;
+  Item: TItemOrdem;
+begin
+  qrAtualizar := TFDQuery.Create(nil);
+  try
+    qrAtualizar.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      // Atualização dos dados da Ordem Mestra
+      qrAtualizar.SQL.Text :=
+        'UPDATE ORDEM_SERVICO SET ' +
+        'CLIENTE_ID = :pClienteId, DATA_ABERTURA = :pDataAber, DATA_PREVISTA = :pDataPrev, ' +
+        'DATA_FECHAMENTO = :pDataFech, STATUS = :pStatus, DESCRICAO_PROBLEMA = :pDescricao, ' +
+        'VALOR_TOTAL = :pValorTotal, FOTO = :pFoto WHERE ID = :pID';
+
+      if Ordem.Imagem.Size > 0 then
+        begin
+          Ordem.Imagem.Position := 0; // Volta o ponteiro para o início da leitura
+          qrAtualizar.ParamByName('pFoto').LoadFromStream(Ordem.Imagem, ftBlob);
+        end
+        else
+          qrAtualizar.ParamByName('pFoto').Clear;
+      qrAtualizar.ParamByName('pID').AsInteger := Ordem.Id;
+      qrAtualizar.ParamByName('pClienteId').AsInteger := Ordem.Cliente.Id;
+      qrAtualizar.ParamByName('pDataAber').AsDate := Ordem.DataAbertura;
+      qrAtualizar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
+      // Tratamento para data de fechamento nula
+      if Ordem.DataFechamento = 0 then
+        qrAtualizar.ParamByName('pDataFech').Clear
+      else
+        qrAtualizar.ParamByName('pDataFech').AsDate := Ordem.DataFechamento;
+      qrAtualizar.ParamByName('pStatus').AsString := Ordem.Status;
+      qrAtualizar.ParamByName('pDescricao').AsString := Ordem.DescricaoProblema;
+      qrAtualizar.ParamByName('pValorTotal').AsCurrency := Ordem.ValorTotal;
+      qrAtualizar.ExecSQL;
+
+      // Padrão de exclusão e reinserção para os itens (Evita complexidade de sincronização diferencial)
+      qrAtualizar.SQL.Text := 'DELETE FROM ITEM_ORDEM WHERE ORDEM_ID = :pID';
+      qrAtualizar.ParamByName('pID').AsInteger := Ordem.Id;
+      qrAtualizar.ExecSQL;
+
+      qrAtualizar.SQL.Text :=
+        'INSERT INTO ITEM_ORDEM (ORDEM_ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO) ' +
+        'VALUES (:pOrdemId, :pDescricaoItem, :pQuantidade, :pValorUnitario)';
+
+      for Item in Ordem.Itens do
+      begin
+        qrAtualizar.ParamByName('pOrdemId').AsInteger := Ordem.Id;
+        qrAtualizar.ParamByName('pDescricaoItem').AsString := Item.Descricao;
+        qrAtualizar.ParamByName('pQuantidade').AsFloat := Item.Quantidade;
+        qrAtualizar.ParamByName('pValorUnitario').AsCurrency := Item.ValorUnitario;
+        qrAtualizar.ExecSQL;
+      end;
+
+      Conexao.Commit;
+      Result := True;
+    except
+      Conexao.Rollback;
+      Result := False;
+    end;
+  finally
+    qrAtualizar.Free;
+  end;
+end;
+
+function TOrdemServicoService.RetornarOrdem(IDOrdem: Integer; Conexao: TFDConnection): TOrdemServico;
+var
+  qrRetorno: TFDQuery;
+  FOrdem: TOrdemServico;
+  FItem: TItemOrdem;
+  StreamBanco: TStream;
+begin
+  qrRetorno := TFDQuery.Create(nil);
+  try
+    qrRetorno.Connection := Conexao;
+
+    // 1. Carregar os dados mestres da Ordem
+    qrRetorno.SQL.Text :=
+      'SELECT OS.*, C.NOME AS NOME_CLIENTE FROM ORDEM_SERVICO OS ' +
+      'INNER JOIN CLIENTE C ON (C.ID = OS.CLIENTE_ID) WHERE OS.ID = :pID';
+    qrRetorno.ParamByName('pID').AsInteger := IDOrdem;
+    qrRetorno.Open;
+
+    FOrdem := TOrdemServico.Create;
+    if not qrRetorno.IsEmpty then
+    begin
+      FOrdem.Id := qrRetorno.FieldByName('ID').AsInteger;
+      FOrdem.Cliente.Id := qrRetorno.FieldByName('CLIENTE_ID').AsInteger;
+      FOrdem.Cliente.Nome := qrRetorno.FieldByName('NOME_CLIENTE').AsString;
+      FOrdem.DataAbertura := qrRetorno.FieldByName('DATA_ABERTURA').AsDateTime;
+      if not qrRetorno.FieldByName('DATA_PREVISTA').IsNull then
+        FOrdem.DataPrevista := qrRetorno.FieldByName('DATA_PREVISTA').AsDateTime;
+      if not qrRetorno.FieldByName('DATA_FECHAMENTO').IsNull then
+        FOrdem.DataFechamento := qrRetorno.FieldByName('DATA_FECHAMENTO').AsDateTime;
+      FOrdem.Status := qrRetorno.FieldByName('STATUS').AsString;
+      FOrdem.DescricaoProblema := qrRetorno.FieldByName('DESCRICAO_PROBLEMA').AsString;
+      FOrdem.ValorTotal := qrRetorno.FieldByName('VALOR_TOTAL').AsCurrency;
+      if not qrRetorno.FieldByName('FOTO').IsNull then
+        begin
+          StreamBanco := qrRetorno.CreateBlobStream(qrRetorno.FieldByName('FOTO'), bmRead);
+          try
+            FOrdem.Imagem.LoadFromStream(StreamBanco);
+          finally
+            StreamBanco.Free;
+          end;
+        end;
+    end;
+    qrRetorno.Close;
+
+    // 2. Carregar os Itens da Ordem
+    qrRetorno.SQL.Text := 'SELECT * FROM ITEM_ORDEM WHERE ORDEM_ID = :pID';
+    qrRetorno.ParamByName('pID').AsInteger := IDOrdem;
+    qrRetorno.Open;
+
+    while not qrRetorno.Eof do
+    begin
+      FItem := TItemOrdem.Create;
+      FItem.Id := qrRetorno.FieldByName('ID').AsInteger;
+      FItem.OrdemId := FOrdem.Id;
+      FItem.Descricao := qrRetorno.FieldByName('DESCRICAO').AsString;
+      FItem.Quantidade := qrRetorno.FieldByName('QUANTIDADE').AsFloat;
+      FItem.ValorUnitario := qrRetorno.FieldByName('VALOR_UNITARIO').AsCurrency;
+
+      FOrdem.Itens.Add(FItem);
+      qrRetorno.Next;
+    end;
+
+    Result := FOrdem;
+  finally
+    qrRetorno.Free;
+  end;
+end;
+
+function TOrdemServicoService.Deletar(IDOrdem: Integer; Conexao: TFDConnection): Boolean;
+var
+  qrDeletar: TFDQuery;
+begin
+  qrDeletar := TFDQuery.Create(nil);
+  try
+    qrDeletar.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      qrDeletar.SQL.Text := 'UPDATE ORDEM_SERVICO SET STATUS = :pStatus WHERE ID = :pID';
+      qrDeletar.ParamByName('pStatus').AsString := 'CANCELADA';
+      qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
+
+      qrDeletar.ExecSQL;
+
+      Conexao.Commit;
+      Result := True;
+    except
+      Conexao.Rollback;
+      Result := False;
+    end;
+  finally
+    qrDeletar.Free;
+  end;
+end;
+
+function TOrdemServicoService.RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
+var
+  qrNumOS: TFDQuery;
+begin
+  qrNumOS := TFDQuery.Create(Nil);
+  try
+    qrNumOS.Connection := Conexao;
+    qrNumOS.SQL.Text := 'SELECT COUNT(ID) as Contador FROM ORDEM_SERVICO WHERE CLIENTE_ID = :pID';
+
+    Conexao.StartTransaction;
+    try
+      qrNumOS.ParamByName('pID').AsInteger := IDCliente;
+      qrNumOS.Open;
+      Conexao.Commit;
+
+      Result := qrNumOS.FieldByName('Contador').AsInteger;
+    except
+      Conexao.Rollback;
+      Result := 0;
+    end;
+  finally
+    qrNumOS.Free;
+  end;
+end;
+
+function TOrdemServicoService.CarregarPorId(ID: Integer; Conexao: TFDConnection): TOrdemServico;
+var
+  qrOS, qrItens: TFDQuery;
+  FItem: TItemOrdem;
+  StreamBlob: TStream;
+begin
+  Result := nil;
+  qrOS := TFDQuery.Create(nil);
+  qrItens := TFDQuery.Create(nil);
+  try
+    qrOS.Connection := Conexao;
+    qrItens.Connection := Conexao;
+
+    // 1. Busca os dados mestres da OS e do Cliente
+    qrOS.SQL.Text :=
+      'SELECT ID, CLIENTE_ID, DESCRICAO_PROBLEMA, DATA_ABERTURA, DATA_PREVISTA, STATUS, VALOR_TOTAL, IMAGEM ' +
+      'FROM ORDEM_SERVICO WHERE ID = :pID';
+    qrOS.ParamByName('pID').AsInteger := ID;
+    qrOS.Open;
+
+    if not qrOS.IsEmpty then
+    begin
+      Result := TOrdemServico.Create;
+      Result.Id := qrOS.FieldByName('ID').AsInteger;
+      Result.Cliente.Id := qrOS.FieldByName('CLIENTE_ID').AsInteger;
+      Result.DescricaoProblema := qrOS.FieldByName('DESCRICAO_PROBLEMA').AsString;
+      Result.DataAbertura := qrOS.FieldByName('DATA_ABERTURA').AsDateTime;
+      Result.DataPrevista := qrOS.FieldByName('DATA_PREVISTA').AsDateTime;
+      Result.Status := qrOS.FieldByName('STATUS').AsString;
+      Result.ValorTotal := qrOS.FieldByName('VALOR_TOTAL').AsCurrency;
+
+      // Carrega a Imagem BLOB se existir
+      if not qrOS.FieldByName('IMAGEM').IsNull then
+      begin
+        StreamBlob := qrOS.CreateBlobStream(qrOS.FieldByName('IMAGEM'), bmRead);
+        try
+          Result.Imagem.CopyFrom(StreamBlob, 0);
+          StreamBlob.Position := 0;
+        finally
+          StreamBlob.Free;
+        end;
+      end;
+
+      // 2. Busca os itens vinculados a esta OS
+      qrItens.SQL.Text :=
+        'SELECT ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO, VALOR_TOTAL ' +
+        'FROM ITEM_ORDEM WHERE ORDEM_ID = :pID';
+      qrItens.ParamByName('pID').AsInteger := ID;
+      qrItens.Open;
+
+      while not qrItens.Eof do
+      begin
+        FItem := TItemOrdem.Create;
+        FItem.Id := qrItens.FieldByName('ID').AsInteger;
+        FItem.Descricao := qrItens.FieldByName('DESCRICAO').AsString;
+        FItem.Quantidade := qrItens.FieldByName('QUANTIDADE').AsFloat;
+        FItem.ValorUnitario := qrItens.FieldByName('VALOR_UNITARIO').AsCurrency;
+
+        Result.Itens.Add(FItem);
+        qrItens.Next;
+      end;
+    end;
+  finally
+    qrOS.Free;
+    qrItens.Free;
+  end;
+end;
+
+end.

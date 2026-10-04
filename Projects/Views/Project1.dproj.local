@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2026/10/04 10:40:47.245,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 10:40:52.434,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2026/10/04 10:41:58.335,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2026/10/04 10:42:17.283,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uModel.Classes.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2026/10/04 10:43:50.054,C:\Users\leand\Documents\Embarcadero\Studio\Projects\services\uService.OrdemServico.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2026/10/04 10:47:31.677,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 11:36:08.573,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServico.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 11:36:08.573,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServico.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/10/04 11:47:45.823,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServicoCart.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServico.pas</Transaction>
+    <Transaction>2026/10/04 11:47:45.823,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServicoCart.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServico.dfm</Transaction>
+    <Transaction>2026/10/04 11:47:53.449,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2026/10/04 12:00:00.054,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2026/10/04 12:00:44.326,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\TFormCadastroOS.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit3.dfm</Transaction>
+    <Transaction>2026/10/04 12:00:44.326,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\TFormCadastroOS.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2026/10/04 12:08:21.643,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmCadastroOS.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\TFormCadastroOS.pas</Transaction>
+    <Transaction>2026/10/04 12:08:21.643,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmCadastroOS.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\TFormCadastroOS.dfm</Transaction>
+    <Transaction>2026/10/04 12:23:11.343,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 12:24:45.625,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uDM.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2026/10/04 12:24:45.625,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uDM.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2026/10/04 12:25:23.327,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uDM.pas=</Transaction>
+    <Transaction>2026/10/04 12:25:32.620,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 12:26:02.520,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uDM.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/10/04 12:26:02.520,C:\Users\leand\Documents\Embarcadero\Studio\Projects\uDM.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 12:27:11.412,=C:\Users\leand\Documents\ProjetoDelphi\ProvaSky\Views\uFrmCadastro.pas</Transaction>
+    <Transaction>2026/10/04 12:27:37.748,C:\Users\leand\Documents\ProjetoDelphi\ProvaSky\Views\uFrmCadastro.pas=</Transaction>
+    <Transaction>2026/10/04 12:27:47.892,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 12:44:40.203,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmCadastroCliente.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/10/04 12:44:40.203,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmCadastroCliente.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 12:44:50.186,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmOrdensServicoCart.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServicoCart.pas</Transaction>
+    <Transaction>2026/10/04 12:44:50.186,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmOrdensServicoCart.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmOrdensServicoCart.dfm</Transaction>
+    <Transaction>2026/10/04 12:44:59.327,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmCadastroOS.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmCadastroOS.dfm</Transaction>
+    <Transaction>2026/10/04 12:44:59.327,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmCadastroOS.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\frmCadastroOS.pas</Transaction>
+    <Transaction>2026/10/04 15:17:22.148,=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 15:17:34.427,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmPrincipal.dfm=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/10/04 15:17:34.427,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\uFrmPrincipal.pas=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/10/04 18:23:45.948,C:\Users\leand\Documents\Embarcadero\Studio\Projects\Views\Project1.dproj=C:\Users\leand\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+  <ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="..\..\Projects"/>
+    <File Path="..\uModel.Classes.pas"/>
+    <File Path="..\services"/>
+    <File Path="..\services\uService.OrdemServico.pas"/>
+    <File Path="..\uDM.pas"/>
+    <File Path="..\uDM.dfm"/>
+    <File Path="uFrmOrdensServicoCart.pas"/>
+    <File Path="uFrmOrdensServicoCart.dfm"/>
+    <File Path="uFrmCadastroOS.pas"/>
+    <File Path="uFrmCadastroOS.dfm"/>
+    <File Path="uFrmCadastroCliente.pas"/>
+    <File Path="uFrmCadastroCliente.dfm"/>
+    <File Path="uFrmPrincipal.pas"/>
+    <File Path="uFrmPrincipal.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

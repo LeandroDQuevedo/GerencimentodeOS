@@ -1,0 +1,195 @@
+object FormCadastroOS: TFormCadastroOS
+  Left = 0
+  Top = 0
+  Caption = 'FormCadastroOS'
+  ClientHeight = 443
+  ClientWidth = 670
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Image1: TImage
+    Left = 32
+    Top = 8
+    Width = 177
+    Height = 161
+  end
+  object lbDescricao: TLabel
+    Left = 392
+    Top = 269
+    Width = 55
+    Height = 15
+    Caption = 'Descri'#231#227'o:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = 15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    OnClick = lbDescricaoClick
+  end
+  object lbDataEnt: TLabel
+    Left = 268
+    Top = 166
+    Width = 93
+    Height = 15
+    Caption = 'Data de Entrada:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = 15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    OnClick = lbDescricaoClick
+  end
+  object lbDataPrev: TLabel
+    Left = 452
+    Top = 166
+    Width = 44
+    Height = 15
+    Caption = 'Previs'#227'o'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = 15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    OnClick = lbDescricaoClick
+  end
+  object LabCliente: TLabel
+    Left = 268
+    Top = 71
+    Width = 37
+    Height = 13
+    Caption = 'Cliente:'
+    OnClick = LabClienteClick
+  end
+  object LabQntdeUnidMed: TLabel
+    Left = 458
+    Top = 72
+    Width = 26
+    Height = 13
+    Caption = 'Item:'
+    OnClick = LabQntdeUnidMedClick
+  end
+  object lbQntd: TLabel
+    Left = 567
+    Top = 72
+    Width = 24
+    Height = 13
+    Caption = 'Qntd'
+    OnClick = LabQntdeUnidMedClick
+  end
+  object btnAdicionarFoto: TButton
+    Left = 32
+    Top = 184
+    Width = 177
+    Height = 41
+    Caption = 'Adicionar Foto'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = 25
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    OnClick = btnAdicionarFotoClick
+  end
+  object edtDescricao: TEdit
+    Left = 268
+    Top = 290
+    Width = 304
+    Height = 119
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = 15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    TextHint = 'Descreva o problema...'
+  end
+  object edtDataEnt: TMaskEdit
+    Left = 268
+    Top = 187
+    Width = 120
+    Height = 23
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 2
+    Text = '  /  /    '
+    Visible = False
+  end
+  object edtDataPrev: TMaskEdit
+    Left = 452
+    Top = 184
+    Width = 120
+    Height = 23
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 3
+    Text = '  /  /    '
+    Visible = False
+  end
+  object cbxCategoria: TDBLookupComboBox
+    Left = 268
+    Top = 92
+    Width = 139
+    Height = 21
+    KeyField = 'ID'
+    ListField = 'NOME'
+    TabOrder = 4
+  end
+  object btnAddCliente: TButton
+    Left = 311
+    Top = 71
+    Width = 41
+    Height = 15
+    Caption = '+ add'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -9
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 5
+  end
+  object edtQntd: TEdit
+    Left = 567
+    Top = 90
+    Width = 47
+    Height = 23
+    Hint = '0'
+    Enabled = False
+    TabOrder = 6
+    Text = '0'
+  end
+  object cbxItem: TDBLookupComboBox
+    Left = 458
+    Top = 91
+    Width = 103
+    Height = 21
+    KeyField = 'ID'
+    ListField = 'SIGLA'
+    TabOrder = 7
+  end
+  object btnAddUnidMed: TButton
+    Left = 490
+    Top = 72
+    Width = 41
+    Height = 15
+    Caption = '+ add'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -9
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 8
+  end
+end
