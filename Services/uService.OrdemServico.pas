@@ -28,19 +28,46 @@ begin
     qrSalvar.Connection := Conexao;
     Conexao.StartTransaction;
     try
-      // Inserção da Ordem de Serviço com captura do ID gerado
       qrSalvar.SQL.Text :=
         'INSERT INTO ORDEM_SERVICO (CLIENTE_ID, DATA_ABERTURA, DATA_PREVISTA, ' +
-        'STATUS, DESCRICAO_PROBLEMA, VALOR_TOTAL) ' +
-        'VALUES (:pClienteId, :pDataAber, :pDataPrev, :pStatus, :pDescricao, :pValorTotal) ' +
+        'STATUS, DESCRICAO_PROBLEMA, VALOR_TOTAL, FOTO, MINIATURA) ' +
+        'VALUES (:pClienteId, :pDataAber, :pDataPrev, :pStatus, :pDescricao, :pValorTotal, :pFoto, :pMiniatura) ' +
         'RETURNING ID';
 
       qrSalvar.ParamByName('pClienteId').AsInteger := Ordem.Cliente.Id;
       qrSalvar.ParamByName('pDataAber').AsDate := Ordem.DataAbertura;
-      qrSalvar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
+      if Ordem.DataPrevista = 0 then
+      begin
+        qrSalvar.ParamByName('pDataPrev').DataType := ftDate;
+        qrSalvar.ParamByName('pDataPrev').Clear;
+      end
+      else
+        qrSalvar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
       qrSalvar.ParamByName('pStatus').AsString := Ordem.Status;
       qrSalvar.ParamByName('pDescricao').AsString := Ordem.DescricaoProblema;
       qrSalvar.ParamByName('pValorTotal').AsCurrency := Ordem.ValorTotal;
+
+      if Ordem.Imagem.Size > 0 then
+      begin
+        Ordem.Imagem.Position := 0;
+        qrSalvar.ParamByName('pFoto').LoadFromStream(Ordem.Imagem, ftBlob);
+      end
+      else
+      begin
+        qrSalvar.ParamByName('pFoto').DataType := ftBlob;
+        qrSalvar.ParamByName('pFoto').Clear;
+      end;
+
+      if Ordem.Miniatura.Size > 0 then
+      begin
+        Ordem.Miniatura.Position := 0;
+        qrSalvar.ParamByName('pMiniatura').LoadFromStream(Ordem.Miniatura, ftBlob);
+      end
+      else
+      begin
+        qrSalvar.ParamByName('pMiniatura').DataType := ftBlob;
+        qrSalvar.ParamByName('pMiniatura').Clear;
+      end;
 
       qrSalvar.Open;
       Ordem.Id := qrSalvar.FieldByName('ID').AsInteger;
@@ -62,8 +89,11 @@ begin
       Conexao.Commit;
       Result := True;
     except
-      Conexao.Rollback;
-      Result := False;
+      on Erro: Exception do
+      begin
+        Conexao.Rollback;
+        raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
+      end;
     end;
   finally
     qrSalvar.Free;
@@ -96,8 +126,11 @@ begin
       Conexao.Commit;
       Result := True;
     except
-      Conexao.Rollback;
-      Result := False;
+      on Erro: Exception do
+      begin
+        Conexao.Rollback;
+        raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
+      end;
     end;
   finally
     qrSalvar.Free;
@@ -114,12 +147,11 @@ begin
     qrAtualizar.Connection := Conexao;
     Conexao.StartTransaction;
     try
-      // Atualização dos dados da Ordem Mestra
       qrAtualizar.SQL.Text :=
         'UPDATE ORDEM_SERVICO SET ' +
         'CLIENTE_ID = :pClienteId, DATA_ABERTURA = :pDataAber, DATA_PREVISTA = :pDataPrev, ' +
         'DATA_FECHAMENTO = :pDataFech, STATUS = :pStatus, DESCRICAO_PROBLEMA = :pDescricao, ' +
-        'VALOR_TOTAL = :pValorTotal, FOTO = :pFoto WHERE ID = :pID';
+        'VALOR_TOTAL = :pValorTotal, FOTO = :pFoto, MINIATURA = :pMiniatura WHERE ID = :pID';
 
       if Ordem.Imagem.Size > 0 then
         begin
@@ -127,14 +159,38 @@ begin
           qrAtualizar.ParamByName('pFoto').LoadFromStream(Ordem.Imagem, ftBlob);
         end
         else
+        begin
+          qrAtualizar.ParamByName('pFoto').DataType := ftBlob;
           qrAtualizar.ParamByName('pFoto').Clear;
+        end;
+
+      if Ordem.Miniatura.Size > 0 then
+      begin
+        Ordem.Miniatura.Position := 0;
+        qrAtualizar.ParamByName('pMiniatura').LoadFromStream(Ordem.Miniatura, ftBlob);
+      end
+      else
+      begin
+        qrAtualizar.ParamByName('pMiniatura').DataType := ftBlob;
+        qrAtualizar.ParamByName('pMiniatura').Clear;
+      end;
+
       qrAtualizar.ParamByName('pID').AsInteger := Ordem.Id;
       qrAtualizar.ParamByName('pClienteId').AsInteger := Ordem.Cliente.Id;
       qrAtualizar.ParamByName('pDataAber').AsDate := Ordem.DataAbertura;
-      qrAtualizar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
+      if Ordem.DataPrevista = 0 then
+      begin
+        qrAtualizar.ParamByName('pDataPrev').DataType := ftDate;
+        qrAtualizar.ParamByName('pDataPrev').Clear;
+      end
+      else
+        qrAtualizar.ParamByName('pDataPrev').AsDate := Ordem.DataPrevista;
       // Tratamento para data de fechamento nula
       if Ordem.DataFechamento = 0 then
+        begin
+        qrAtualizar.ParamByName('pDataFech').DataType := ftDate;
         qrAtualizar.ParamByName('pDataFech').Clear
+        end
       else
         qrAtualizar.ParamByName('pDataFech').AsDate := Ordem.DataFechamento;
       qrAtualizar.ParamByName('pStatus').AsString := Ordem.Status;
@@ -163,8 +219,11 @@ begin
       Conexao.Commit;
       Result := True;
     except
-      Conexao.Rollback;
-      Result := False;
+      on Erro: Exception do
+        begin
+          Conexao.Rollback;
+          raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
+        end;
     end;
   finally
     qrAtualizar.Free;
@@ -212,6 +271,16 @@ begin
             StreamBanco.Free;
           end;
         end;
+
+      if not qrRetorno.FieldByName('MINIATURA').IsNull then
+        begin
+          StreamBanco := qrRetorno.CreateBlobStream(qrRetorno.FieldByName('MINIATURA'), bmRead);
+          try
+            FOrdem.Miniatura.LoadFromStream(StreamBanco);
+          finally
+            StreamBanco.Free;
+          end;
+        end;
     end;
     qrRetorno.Close;
 
@@ -249,7 +318,7 @@ begin
     Conexao.StartTransaction;
     try
       qrDeletar.SQL.Text := 'UPDATE ORDEM_SERVICO SET STATUS = :pStatus WHERE ID = :pID';
-      qrDeletar.ParamByName('pStatus').AsString := 'CANCELADA';
+      qrDeletar.ParamByName('pStatus').AsString := STATUS_CANCELADA;
       qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
 
       qrDeletar.ExecSQL;
@@ -257,8 +326,11 @@ begin
       Conexao.Commit;
       Result := True;
     except
-      Conexao.Rollback;
-      Result := False;
+      on Erro: Exception do
+      begin
+        Conexao.Rollback;
+        raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
+      end;
     end;
   finally
     qrDeletar.Free;

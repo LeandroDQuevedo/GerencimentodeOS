@@ -4993,13 +4993,12 @@ object dmPrincipal: TdmPrincipal
     Top = 216
   end
   object qrListaOS: TFDQuery
-    Active = True
     Connection = ConexaoBanco
     SQL.Strings = (
       
         'SELECT '#10'  OS.ID,'#10'  OS.DATA_ABERTURA,'#10'  OS.STATUS,'#10'  OS.VALOR_TOT' +
-        'AL,'#10'  C.NOME AS NOME_CLIENTE'#10'FROM ORDEM_SERVICO OS'#10'INNER JOIN CL' +
-        'IENTE C ON (OS.CLIENTE_ID = C.ID)')
+        'AL, OS.MINIATURA,'#10'  C.NOME AS NOME_CLIENTE'#10'FROM ORDEM_SERVICO OS' +
+        #10'INNER JOIN CLIENTE C ON (OS.CLIENTE_ID = C.ID)')
     Left = 312
     Top = 416
     object qrListaOSID: TIntegerField
@@ -5012,6 +5011,7 @@ object dmPrincipal: TdmPrincipal
       FieldName = 'DATA_ABERTURA'
       Origin = 'DATA_ABERTURA'
       Required = True
+      DisplayFormat = 'dd/mm/yyyy'
     end
     object qrListaOSSTATUS: TWideStringField
       FieldName = 'STATUS'
@@ -5022,6 +5022,7 @@ object dmPrincipal: TdmPrincipal
     object qrListaOSVALOR_TOTAL: TFMTBCDField
       FieldName = 'VALOR_TOTAL'
       Origin = 'VALOR_TOTAL'
+      currency = True
       Precision = 18
       Size = 2
     end
@@ -5032,6 +5033,10 @@ object dmPrincipal: TdmPrincipal
       ProviderFlags = []
       ReadOnly = True
       Size = 120
+    end
+    object qrListaOSMINIATURA: TBlobField
+      FieldName = 'MINIATURA'
+      Origin = 'MINIATURA'
     end
   end
   object dsListaOS: TDataSource
@@ -5045,10 +5050,45 @@ object dmPrincipal: TdmPrincipal
       'select * from Cliente')
     Left = 24
     Top = 408
+    object qrClienteID: TIntegerField
+      DisplayWidth = 10
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qrClienteNOME: TWideStringField
+      DisplayWidth = 11
+      FieldName = 'NOME'
+      Origin = 'NOME'
+      Required = True
+      Size = 120
+    end
+    object qrClienteDOCUMENTO: TWideStringField
+      DisplayWidth = 14
+      FieldName = 'DOCUMENTO'
+      Origin = 'DOCUMENTO'
+    end
+    object qrClienteEMAIL: TWideStringField
+      DisplayWidth = 14
+      FieldName = 'EMAIL'
+      Origin = 'EMAIL'
+      Size = 120
+    end
+    object qrClienteTELEFONE: TWideStringField
+      DisplayWidth = 14
+      FieldName = 'TELEFONE'
+      Origin = 'TELEFONE'
+      Size = 30
+    end
+    object qrClienteDATACADASTRO: TSQLTimeStampField
+      DisplayWidth = 34
+      FieldName = 'DATACADASTRO'
+      Origin = 'DATACADASTRO'
+    end
   end
   object dsCliente: TDataSource
     DataSet = qrCliente
-    OnDataChange = dsClienteDataChange
     Left = 24
     Top = 352
   end

@@ -25,7 +25,13 @@ type
     qrListaOSSTATUS: TWideStringField;
     qrListaOSVALOR_TOTAL: TFMTBCDField;
     qrListaOSNOME_CLIENTE: TWideStringField;
-    procedure dsClienteDataChange(Sender: TObject; Field: TField);
+    qrClienteID: TIntegerField;
+    qrClienteNOME: TWideStringField;
+    qrClienteDOCUMENTO: TWideStringField;
+    qrClienteEMAIL: TWideStringField;
+    qrClienteTELEFONE: TWideStringField;
+    qrClienteDATACADASTRO: TSQLTimeStampField;
+    qrListaOSMINIATURA: TBlobField;
   private
     { Private declarations }
   public

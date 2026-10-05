@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, Vcl.Mask,
-  Vcl.ExtCtrls, Vcl.ExtDlgs, Vcl.ComCtrls, uFrmCadastroCliente, uModel.Classes, uService.OrdemServico, uDM;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.Imaging.jpeg, Vcl.Imaging.pngimage,
+  uService.Imagem, Vcl.ExtCtrls, Vcl.ExtDlgs, Vcl.ComCtrls, uFrmCadastroCliente, uModel.Classes, uService.OrdemServico, uDM;
 
 type
   TFrmCadastroOS = class(TForm)
@@ -19,7 +19,7 @@ type
     lbDataPrev: TLabel;
     cbxCliente: TDBLookupComboBox;
     btnAddCliente: TButton;
-    LabCliente: TLabel;
+    lbCliente: TLabel;
 
     // Campos dos Itens da OS
     edtDescricaoItem: TEdit;
@@ -36,6 +36,7 @@ type
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure btnAdicionarFotoClick(Sender: TObject);
     procedure btnAddClienteClick(Sender: TObject);
     procedure btnAdicionarItemClick(Sender: TObject);
@@ -44,8 +45,10 @@ type
   private
     FOrdem: TOrdemServico;
     procedure AtualizarListaVisual;
+    procedure CarregarDadosEdicao;
   public
     { Public declarations }
+    OrdemIDEdicao: Integer;
   end;
 
 var
@@ -57,6 +60,7 @@ implementation
 
 procedure TFrmCadastroOS.FormCreate(Sender: TObject);
 begin
+  cbxCliente.ListSource.DataSet.Open;
   FOrdem := TOrdemServico.Create;
 
   LsvMovimentacoes.ViewStyle := vsReport;
@@ -67,8 +71,10 @@ begin
   LsvMovimentacoes.Columns[1].Width := 80;
   LsvMovimentacoes.Columns.Add.Caption := 'Val. Unitário';
   LsvMovimentacoes.Columns[2].Width := 100;
+//  LsvMovimentacoes.Columns[2].Currency := True;
   LsvMovimentacoes.Columns.Add.Caption := 'Total';
   LsvMovimentacoes.Columns[3].Width := 100;
+//  LsvMovimentacoes.Columns[3].Currency := True;
 end;
 
 procedure TFrmCadastroOS.FormDestroy(Sender: TObject);
@@ -89,12 +95,21 @@ begin
 end;
 
 procedure TFrmCadastroOS.btnAdicionarFotoClick(Sender: TObject);
+var
+  ServiceImagem: TImagemService;
 begin
   if OpenPictureDialog1.Execute then
   begin
     Image1.Picture.LoadFromFile(OpenPictureDialog1.FileName);
     FOrdem.Imagem.Clear;
     Image1.Picture.Graphic.SaveToStream(FOrdem.Imagem);
+
+    ServiceImagem := TImagemService.Create;
+    try
+      ServiceImagem.GerarMiniatura(Image1.Picture.Graphic, FOrdem.Miniatura, 160);
+    finally
+      ServiceImagem.Free;
+    end;
   end;
 end;
 
@@ -166,7 +181,7 @@ begin
   FOrdem.DescricaoProblema := edtDescricao.Text;
   FOrdem.DataAbertura := StrToDateDef(edtDataEnt.Text, Date);
   FOrdem.DataPrevista := StrToDateDef(edtDataPrev.Text, 0);
-  FOrdem.Status := 'ABERTO';
+  if OrdemIDEdicao = 0 then FOrdem.Status := STATUS_ABERTA;
 
   if VarIsNull(cbxCliente.KeyValue) then
   begin
@@ -193,22 +208,82 @@ begin
   end;
 
   Service := TOrdemServicoService.Create;
-  try
-    if Service.Salvar(FOrdem, dmPrincipal.ConexaoBanco) then
+
+  if OrdemIDEdicao > 0 then
     begin
-      ShowMessage('Ordem de Serviço salva com sucesso!');
-      Close;
+      try
+        if Service.Atualizar(FOrdem, dmPrincipal.ConexaoBanco) then
+        begin
+          ShowMessage('Ordem de Serviço alterada com sucesso!');
+          Close;
+        end
+        else
+          ShowMessage('Falha ao alterar a Ordem de Serviço na base de dados.');
+      finally
+        Service.Free;
+      end;
+
     end
     else
-      ShowMessage('Falha ao gravar a Ordem de Serviço na base de dados.');
-  finally
-    Service.Free;
-  end;
+    begin
+      try
+        if Service.Salvar(FOrdem, dmPrincipal.ConexaoBanco) then
+        begin
+          ShowMessage('Ordem de Serviço salva com sucesso!');
+          Close;
+        end
+        else
+          ShowMessage('Falha ao gravar a Ordem de Serviço na base de dados.');
+      finally
+        Service.Free;
+      end;
+    end;
+
 end;
 
 procedure TFrmCadastroOS.BtnCancelarClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TFrmCadastroOS.FormShow(Sender: TObject);
+  begin
+    if OrdemIDEdicao > 0 then
+    begin
+      CarregarDadosEdicao;
+    end;
+  end;
+
+procedure TFrmCadastroOS.CarregarDadosEdicao;
+var
+  Service: TOrdemServicoService;
+  OSCarregada: TOrdemServico;
+begin
+  Service := TOrdemServicoService.Create;
+  try
+    OSCarregada := Service.RetornarOrdem(OrdemIDEdicao, dmPrincipal.ConexaoBanco);
+
+    // Substitui a instância vazia criada no FormCreate pela OS carregada do banco
+    FOrdem.Free;
+    FOrdem := OSCarregada;
+
+    edtDescricao.Text := FOrdem.DescricaoProblema;
+    edtDataEnt.Text := DateToStr(FOrdem.DataAbertura);
+    if FOrdem.DataPrevista > 0 then
+      edtDataPrev.Text := DateToStr(FOrdem.DataPrevista);
+
+    cbxCliente.KeyValue := FOrdem.Cliente.Id;
+
+    if FOrdem.Imagem.Size > 0 then
+    begin
+      FOrdem.Imagem.Position := 0;
+      Image1.Picture.LoadFromStream(FOrdem.Imagem);
+    end;
+
+    AtualizarListaVisual;
+  finally
+    Service.Free;
+  end;
 end;
 
 end.

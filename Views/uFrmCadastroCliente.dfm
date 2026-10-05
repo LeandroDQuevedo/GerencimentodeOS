@@ -1,9 +1,9 @@
-object Form1: TForm1
-  Left = 0
-  Top = 0
-  Caption = 'Form1'
+object FrmCadastroCliente: TFrmCadastroCliente
+  Left = 617
+  Top = 309
+  Caption = 'FrmCadastroCliente'
   ClientHeight = 575
-  ClientWidth = 599
+  ClientWidth = 868
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,12 +11,13 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesigned
   PixelsPerInch = 96
   TextHeight = 13
   object pnTipoinfo: TPanel
     Left = 0
     Top = 0
-    Width = 599
+    Width = 868
     Height = 49
     Align = alTop
     TabOrder = 0
@@ -26,7 +27,7 @@ object Form1: TForm1
   object pnBtnFinal: TPanel
     Left = 0
     Top = 534
-    Width = 599
+    Width = 868
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -34,8 +35,8 @@ object Form1: TForm1
     ExplicitTop = 466
     ExplicitWidth = 814
     object BtnSalvar: TButton
-      Left = 528
-      Top = 8
+      Left = 604
+      Top = 6
       Width = 89
       Height = 25
       Caption = 'Salvar'
@@ -44,13 +45,14 @@ object Form1: TForm1
       OnClick = BtnSalvarClick
     end
     object BtnCancelar: TButton
-      Left = 709
-      Top = 8
+      Left = 763
+      Top = 6
       Width = 89
       Height = 25
       Cancel = True
       Caption = 'Cancelar'
       TabOrder = 1
+      OnClick = BtnCancelarClick
     end
     object btnDeletar: TButton
       Left = 16
@@ -63,21 +65,19 @@ object Form1: TForm1
     end
   end
   object pnCampos: TPanel
-    Left = 288
+    Left = 565
     Top = 49
-    Width = 311
+    Width = 303
     Height = 485
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 324
-    ExplicitHeight = 417
+    ExplicitLeft = 296
     object lbCPF: TLabel
       Left = 158
       Top = 193
       Width = 23
       Height = 13
       Caption = 'CPF:'
-      Visible = False
     end
     object lbEmail: TLabel
       Left = 158
@@ -85,7 +85,6 @@ object Form1: TForm1
       Width = 28
       Height = 13
       Caption = 'Email:'
-      Visible = False
     end
     object lbTelefone: TLabel
       Left = 31
@@ -93,7 +92,6 @@ object Form1: TForm1
       Width = 46
       Height = 13
       Caption = 'Telefone:'
-      Visible = False
     end
     object lbNome: TLabel
       Left = 31
@@ -109,7 +107,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 1
       TextHint = 'Email...'
-      Visible = False
     end
     object edtTelefone: TEdit
       Left = 31
@@ -118,7 +115,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 2
       TextHint = 'Telefone...'
-      Visible = False
     end
     object edtNome: TEdit
       Left = 31
@@ -137,15 +133,15 @@ object Form1: TForm1
       MaxLength = 14
       TabOrder = 3
       Text = '   .   .   -  '
-      Visible = False
     end
   end
   object grListaAdd: TDBGrid
     Left = 0
     Top = 49
-    Width = 288
+    Width = 565
     Height = 485
     Align = alClient
+    DataSource = dmPrincipal.dsCliente
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 3
     TitleFont.Charset = DEFAULT_CHARSET
@@ -153,5 +149,7 @@ object Form1: TForm1
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnCellClick = grListaAddCellClick
+    OnKeyUp = grListaAddKeyUp
   end
 end

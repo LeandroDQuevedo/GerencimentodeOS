@@ -5,6 +5,11 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections;
 
+const
+  STATUS_ABERTA       = 'Aberta';
+  STATUS_EM_ANDAMENTO = 'Em Andamento';
+  STATUS_CONCLUIDA    = 'Concluída';
+  STATUS_CANCELADA    = 'Cancelada';
 type
   TCliente = class
   private
@@ -52,6 +57,8 @@ type
     FValorTotal: Currency;
     FCliente: TCliente;
     FItens: TObjectList<TItemOrdem>;
+    FImagem: TMemoryStream;
+    FMiniatura: TMemoryStream;
   public
     constructor Create;
     destructor Destroy; override;
@@ -69,6 +76,8 @@ type
 
     property Cliente: TCliente read FCliente write FCliente;
     property Itens: TObjectList<TItemOrdem> read FItens write FItens;
+    property Imagem: TMemoryStream read FImagem write FImagem;
+    property Miniatura: TMemoryStream read FMiniatura write FMiniatura;
   end;
 
 implementation
@@ -102,12 +111,16 @@ constructor TOrdemServico.Create;
 begin
   FCliente := TCliente.Create;
   FItens := TObjectList<TItemOrdem>.Create(True);
+  FImagem := TMemoryStream.Create;
+  FMiniatura := TMemoryStream.Create;
   FDataAbertura := Now; // Regra padrão de negócio inicial
-  FStatus := 'ABERTO';
+  FStatus := STATUS_ABERTA;
 end;
 
 destructor TOrdemServico.Destroy;
 begin
+  FImagem.Free;
+  FMiniatura.Free;
   FCliente.Free;
   FItens.Free;
   inherited;

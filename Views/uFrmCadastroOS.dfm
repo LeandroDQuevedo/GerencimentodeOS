@@ -11,6 +11,9 @@ object FrmCadastroOS: TFrmCadastroOS
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
@@ -18,6 +21,8 @@ object FrmCadastroOS: TFrmCadastroOS
     Top = 8
     Width = 177
     Height = 161
+    Center = True
+    Proportional = True
   end
   object lbDataEnt: TLabel
     Left = 268
@@ -45,7 +50,7 @@ object FrmCadastroOS: TFrmCadastroOS
     Font.Style = []
     ParentFont = False
   end
-  object LabCliente: TLabel
+  object lbCliente: TLabel
     Left = 268
     Top = 39
     Width = 37
@@ -71,32 +76,30 @@ object FrmCadastroOS: TFrmCadastroOS
     Left = 268
     Top = 123
     Width = 120
-    Height = 23
+    Height = 21
     EditMask = '!99/99/0000;1;_'
     MaxLength = 10
     TabOrder = 1
     Text = '  /  /    '
-    Visible = False
   end
   object edtDataPrev: TMaskEdit
     Left = 471
     Top = 123
     Width = 120
-    Height = 23
+    Height = 21
     EditMask = '!99/99/0000;1;_'
     MaxLength = 10
     TabOrder = 2
     Text = '  /  /    '
-    Visible = False
   end
   object cbxCliente: TDBLookupComboBox
     Left = 268
     Top = 60
     Width = 139
     Height = 21
-    DataSource = dmPrincipal.dsCliente
     KeyField = 'ID'
     ListField = 'NOME'
+    ListSource = dmPrincipal.dsCliente
     TabOrder = 3
   end
   object btnAddCliente: TButton
@@ -121,11 +124,9 @@ object FrmCadastroOS: TFrmCadastroOS
     Height = 59
     Align = alBottom
     TabOrder = 5
-    ExplicitTop = 384
-    ExplicitWidth = 670
     object BtnSalvar: TButton
       Left = 56
-      Top = 14
+      Top = 6
       Width = 97
       Height = 35
       Caption = 'Salvar'
@@ -141,6 +142,7 @@ object FrmCadastroOS: TFrmCadastroOS
       Cancel = True
       Caption = 'Cancelar'
       TabOrder = 1
+      OnClick = BtnCancelarClick
     end
   end
   object Panel2: TPanel
@@ -168,7 +170,7 @@ object FrmCadastroOS: TFrmCadastroOS
       Left = 16
       Top = 40
       Width = 217
-      Height = 161
+      Height = 23
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = 15
@@ -177,7 +179,6 @@ object FrmCadastroOS: TFrmCadastroOS
       ParentFont = False
       TabOrder = 0
       TextHint = 'Descreva o servi'#231'o...'
-      OnChange = edtDescricaoChange
     end
     object LsvMovimentacoes: TListView
       Left = 260
@@ -236,9 +237,18 @@ object FrmCadastroOS: TFrmCadastroOS
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 7
-    OnClick = btnAddClienteClick
+    OnClick = btnAdicionarItemClick
   end
   object OpenPictureDialog1: TOpenPictureDialog
-    Top = 160
+    Filter = 
+      'All (*.gif;*.png;*.jpg;*.jpeg;*.bmp;*.ico;*.emf;*.wmf;*.tif;*.ti' +
+      'ff)|*.gif;*.png;*.jpg;*.jpeg;*.bmp;*.ico;*.emf;*.wmf;*.tif;*.tif' +
+      'f|GIF Image (*.gif)|*.gif|Portable Network Graphics (*.png)|*.pn' +
+      'g|AAAAAAAAAA|*.jpg|JPEG Image File (*.jpeg)|*.jpeg|Bitmaps (*.bm' +
+      'p)|*.jpg|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Me' +
+      'tafiles (*.wmf)|*.wmf|TIFF Images (*.tif)|*.tif|TIFF Images (*.t' +
+      'iff)|*.tiff'
+    Left = 224
+    Top = 192
   end
 end
