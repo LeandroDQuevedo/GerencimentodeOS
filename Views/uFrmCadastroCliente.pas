@@ -4,15 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
-  Vcl.Mask, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uService.OrdemServico, uDM; // Adicionado uDM e ajustado uModel.OrdemServico
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, uFuncoes,
+  Vcl.Mask, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uService.OrdemServico, uDM, uService.Cliente;
 
 type
   TFrmCadastroCliente = class(TForm)
     pnTipoinfo: TPanel;
     pnBtnFinal: TPanel;
-    BtnSalvar: TButton;
-    BtnCancelar: TButton;
+    btnSalvar: TButton;
+    btnCancelar: TButton;
     btnDeletar: TButton;
     pnCampos: TPanel;
     lbCPF: TLabel;
@@ -24,14 +24,18 @@ type
     edtNome: TEdit;
     mktCPF: TMaskEdit;
     grListaAdd: TDBGrid;
-    procedure BtnSalvarClick(Sender: TObject);
-    procedure BtnCancelarClick(Sender: TObject);
-    procedure grListaAddKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    btnAlterar: TButton;
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure grListaAddKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
     procedure grListaAddCellClick(Column: TColumn);
+    procedure btnDeletarClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FCliente: TCliente; // Trocado ObjetoDeEnvio genérico por TCliente tipado
+    IDEdicao: Integer;
   public
     { Public declarations }
   end;
@@ -43,14 +47,74 @@ implementation
 
 {$R *.dfm}
 
-procedure TFrmCadastroCliente.BtnCancelarClick(Sender: TObject);
+procedure TFrmCadastroCliente.btnAlterarClick(Sender: TObject);
+var
+  FCliente : TCliente;
+begin
+
+  if dmPrincipal.qrCliente.IsEmpty then
+  begin
+    ShowMessage('Selecione um Cliente.');
+    Exit;
+  end;
+
+  FCliente := TCliente.Create;
+  FCliente.Id := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
+  FCliente.Nome := dmPrincipal.qrCliente.FieldByName('NOME').AsString;
+  FCliente.Email := dmPrincipal.qrCliente.FieldByName('EMAIL').AsString;
+  FCliente.Telefone := dmPrincipal.qrCliente.FieldByName('TELEFONE').AsString;
+  FCliente.Documento := dmPrincipal.qrCliente.FieldByName('DOCUMENTO').AsString;
+
+  edtNome.Text := FCliente.Nome;
+  edtEmail.Text := FCliente.Email;
+  edtTelefone.Text := FCliente.Telefone;
+  mktCPF.Text := FCliente.Documento;
+
+  IDEdicao := FCliente.Id;
+  btnSalvar.Caption := 'Atualizar';
+  FCliente.Free;
+end;
+
+procedure TFrmCadastroCliente.btnCancelarClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TFrmCadastroCliente.BtnSalvarClick(Sender: TObject);
+procedure TFrmCadastroCliente.btnDeletarClick(Sender: TObject);
 var
-  Service: TOrdemServicoService;
+  IDCliente: Integer;
+  Service: TClienteService;
+begin
+
+  if dmPrincipal.qrCliente.IsEmpty then
+  begin
+    ShowMessage('Selecione um Cliente.');
+    Exit;
+  end;
+  IDCliente := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
+  Service := TClienteService.Create;
+
+  try
+    if ConfirmarAcao('Deseja excluir o cliente?') then
+    begin
+      try
+        Service.DeletarCliente(IDCliente, dmPrincipal.ConexaoBanco);
+        ShowMessage('Cliente excluído com sucesso.');
+        grListaAdd.DataSource.DataSet.Close;
+        grListaAdd.DataSource.DataSet.Open;
+      except
+      on E: Exception do
+        ShowMessage(E.Message);
+    end;
+    end;
+  finally
+    Service.Free;
+  end;
+end;
+
+procedure TFrmCadastroCliente.btnSalvarClick(Sender: TObject);
+var
+  Service: TClienteService;
 begin
   if trim(edtNome.Text) = '' then
   begin
@@ -59,7 +123,7 @@ begin
   end;
   if trim(edtTelefone.Text) = '' then
   begin
-    ShowMessage('Preencha o campo do Telefone!'); // Corrigido a mensagem
+    ShowMessage('Preencha o campo do Telefone!');
     exit;
   end;
   if trim(edtEmail.Text) = '' then
@@ -67,25 +131,41 @@ begin
     ShowMessage('Preencha o campo do Email!');
     exit;
   end;
-  if (trim(mktCPF.Text) = '') or (Length(mktCPF.Text) < 14) then
+   if Pos(' ', mktCPF.Text) > 0 then
   begin
-    ShowMessage('Preencha o campo do CPF!'); // Corrigido a mensagem
+    ShowMessage('Preencha o campo do CPF!');
     exit;
   end;
 
   FCliente := TCliente.Create;
   try
+    FCliente.Id := IDEdicao;
     FCliente.Nome      := edtNome.Text;
     FCliente.Telefone  := edtTelefone.Text;
     FCliente.Documento := mktCPF.Text;
     FCliente.Email     := edtEmail.Text;
 
-    Service := TOrdemServicoService.Create;
+    Service := TClienteService.Create;
     try
-      if Service.SalvarCliente(FCliente, dmPrincipal.ConexaoBanco) then
-        ShowMessage('Novo cadastro de Cliente salvo com sucesso!')
+      if IDEdicao = 0 then
+      begin
+        if Service.SalvarCliente(FCliente, dmPrincipal.ConexaoBanco) then
+          ShowMessage('Novo cadastro de Cliente salvo com sucesso!')
+        else
+          ShowMessage('Erro ao salvar o novo cadastro de Cliente.');
+      end
       else
-        ShowMessage('Erro ao salvar o novo cadastro de Cliente.');
+      begin
+        if Service.AtualizarCliente(FCliente, dmPrincipal.ConexaoBanco) then
+          begin
+          ShowMessage('Alterado o Cadastro com sucesso!');
+          btnSalvar.Caption := 'Salvar';
+          IDEdicao := 0;
+          end
+        else
+          ShowMessage('Erro ao salvar o cadastro de Cliente.');
+      end;
+
 
     finally
       Service.Free;
@@ -96,7 +176,6 @@ begin
         grListaAdd.DataSource.DataSet.Open;
       end;
 
-      // Limpeza apenas dos campos que realmente existem nesta tela
       edtNome.Text := '';
       edtEmail.Text := '';
       edtTelefone.Text := '';
@@ -105,6 +184,11 @@ begin
   finally
     FCliente.Free;
   end;
+end;
+
+procedure TFrmCadastroCliente.FormShow(Sender: TObject);
+begin
+  grListaAdd.DataSource.DataSet.Open;
 end;
 
 procedure TFrmCadastroCliente.grListaAddCellClick(Column: TColumn);

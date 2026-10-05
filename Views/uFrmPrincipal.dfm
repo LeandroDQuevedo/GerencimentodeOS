@@ -11,6 +11,7 @@ object FrmPrincipal: TFrmPrincipal
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  WindowState = wsMaximized
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -107,6 +108,15 @@ object FrmPrincipal: TFrmPrincipal
       TabOrder = 3
       OnClick = btnAlterarStatusClick
     end
+    object btnClientes: TButton
+      Left = 24
+      Top = 232
+      Width = 75
+      Height = 25
+      Caption = 'Clientes'
+      TabOrder = 4
+      OnClick = btnClientesClick
+    end
   end
   object Panel1: TPanel
     Left = 0
@@ -131,8 +141,8 @@ object FrmPrincipal: TFrmPrincipal
       TabOrder = 0
       RowCount = 2
       OnPaintPanel = ctrlGridOSPaintPanel
-      ExplicitLeft = -4
-      ExplicitTop = 6
+      ExplicitWidth = 3533
+      ExplicitHeight = 606
       object lbNomeCliente: TLabel
         Left = 6
         Top = 165

@@ -9,7 +9,9 @@ uses
   uFrmCadastroCliente in 'Views\uFrmCadastroCliente.pas' {FrmCadastroCliente},
   uFrmPrincipal in 'Views\uFrmPrincipal.pas' {FrmPrincipal},
   uService.Imagem in 'Services\uService.Imagem.pas',
-  uFrmAlterarStatus in 'Views\uFrmAlterarStatus.pas' {FrmAlterarStatus};
+  uFrmAlterarStatus in 'Views\uFrmAlterarStatus.pas' {FrmAlterarStatus},
+  uService.Cliente in 'Services\uService.Cliente.pas',
+  uFuncoes in 'Views\uFuncoes.pas';
 
 {$R *.res}
 
@@ -18,6 +20,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TdmPrincipal, dmPrincipal);
   Application.CreateForm(TFrmPrincipal, FrmPrincipal);
-  Application.CreateForm(TFrmAlterarStatus, FrmAlterarStatus);
   Application.Run;
 end.

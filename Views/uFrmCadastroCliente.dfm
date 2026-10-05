@@ -12,6 +12,7 @@ object FrmCadastroCliente: TFrmCadastroCliente
   Font.Style = []
   OldCreateOrder = False
   Position = poDesigned
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnTipoinfo: TPanel
@@ -21,8 +22,6 @@ object FrmCadastroCliente: TFrmCadastroCliente
     Height = 49
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = -179
-    ExplicitWidth = 814
   end
   object pnBtnFinal: TPanel
     Left = 0
@@ -31,10 +30,7 @@ object FrmCadastroCliente: TFrmCadastroCliente
     Height = 41
     Align = alBottom
     TabOrder = 1
-    ExplicitLeft = -179
-    ExplicitTop = 466
-    ExplicitWidth = 814
-    object BtnSalvar: TButton
+    object btnSalvar: TButton
       Left = 604
       Top = 6
       Width = 89
@@ -42,9 +38,9 @@ object FrmCadastroCliente: TFrmCadastroCliente
       Caption = 'Salvar'
       Default = True
       TabOrder = 0
-      OnClick = BtnSalvarClick
+      OnClick = btnSalvarClick
     end
-    object BtnCancelar: TButton
+    object btnCancelar: TButton
       Left = 763
       Top = 6
       Width = 89
@@ -52,16 +48,26 @@ object FrmCadastroCliente: TFrmCadastroCliente
       Cancel = True
       Caption = 'Cancelar'
       TabOrder = 1
-      OnClick = BtnCancelarClick
+      OnClick = btnCancelarClick
     end
     object btnDeletar: TButton
       Left = 16
-      Top = 8
+      Top = 6
       Width = 89
       Height = 25
       Caption = 'Deletar'
       Enabled = False
       TabOrder = 2
+      OnClick = btnDeletarClick
+    end
+    object btnAlterar: TButton
+      Left = 168
+      Top = 6
+      Width = 89
+      Height = 25
+      Caption = 'Alterar'
+      TabOrder = 3
+      OnClick = btnAlterarClick
     end
   end
   object pnCampos: TPanel
@@ -71,7 +77,7 @@ object FrmCadastroCliente: TFrmCadastroCliente
     Height = 485
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 296
+    ExplicitLeft = 571
     object lbCPF: TLabel
       Left = 158
       Top = 193

@@ -12,7 +12,6 @@ type
     function Atualizar(Ordem: TOrdemServico; Conexao: TFDConnection): Boolean;
     function Deletar(IDOrdem: Integer; Conexao: TFDConnection): Boolean;
     function RetornarOrdem(IDOrdem: Integer; Conexao: TFDConnection): TOrdemServico;
-    function SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
     function RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
     function AlterarStatus(IDOrdem: Integer; StatusAtual, NovoStatus: string; Conexao: TFDConnection): Boolean;
     procedure ValidarTrocaStatus(StatusAtual, NovoStatus: string);
@@ -88,43 +87,6 @@ begin
         qrSalvar.ParamByName('pValorUnitario').AsCurrency := Item.ValorUnitario;
         qrSalvar.ExecSQL;
       end;
-
-      Conexao.Commit;
-      Result := True;
-    except
-      on Erro: Exception do
-      begin
-        Conexao.Rollback;
-        raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
-      end;
-    end;
-  finally
-    qrSalvar.Free;
-  end;
-end;
-
-function TOrdemServicoService.SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
-var
-  qrSalvar: TFDQuery;
-begin
-  qrSalvar := TFDQuery.Create(nil);
-  try
-    qrSalvar.Connection := Conexao;
-    Conexao.StartTransaction;
-    try
-      qrSalvar.SQL.Text :=
-        'INSERT INTO CLIENTE (NOME, DOCUMENTO, EMAIL, TELEFONE) ' +
-        'VALUES (:pNome, :pDocumento, :pEmail, :pTelefone) ' +
-        'RETURNING ID';
-
-      qrSalvar.ParamByName('pNome').AsString := Cliente.Nome;
-      qrSalvar.ParamByName('pDocumento').AsString := Cliente.Documento;
-      qrSalvar.ParamByName('pEmail').AsString := Cliente.Email;
-      qrSalvar.ParamByName('pTelefone').AsString := Cliente.Telefone;
-
-      qrSalvar.Open;
-      Cliente.Id := qrSalvar.FieldByName('ID').AsInteger;
-      qrSalvar.Close;
 
       Conexao.Commit;
       Result := True;
@@ -320,11 +282,6 @@ begin
     qrDeletar.Connection := Conexao;
     Conexao.StartTransaction;
     try
-      // Itens primeiro: a FK_ITEM_ORDEM impede apagar a OS com itens vinculados
-      qrDeletar.SQL.Text := 'DELETE FROM ITEM_ORDEM WHERE ORDEM_ID = :pID';
-      qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
-      qrDeletar.ExecSQL;
-
       qrDeletar.SQL.Text := 'DELETE FROM ORDEM_SERVICO WHERE ID = :pID';
       qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
       qrDeletar.ExecSQL;
@@ -421,7 +378,6 @@ begin
     qrStatus.Free;
   end;
 end;
-
 
 procedure TOrdemServicoService.ValidarExclusao(Status: string);
 begin

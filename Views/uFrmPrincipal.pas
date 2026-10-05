@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uFuncoes, uFrmCadastroCliente,
   Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus;
 
 type
@@ -31,6 +31,7 @@ type
     lbNomeCliente: TLabel;
     Label1: TLabel;
     btnAlterarStatus: TButton;
+    btnClientes: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -39,6 +40,7 @@ type
     procedure btnDeletarCardClick(Sender: TObject);
     procedure ctrlGridOSPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
     procedure btnAlterarStatusClick(Sender: TObject);
+    procedure btnClientesClick(Sender: TObject);
   private
     FSQLOriginal: string;
   public
@@ -144,6 +146,19 @@ begin
   btnLocalizarClick(nil);
 end;
 
+procedure TFrmPrincipal.btnClientesClick(Sender: TObject);
+var
+  frmCadastroCliente: TFrmCadastroCliente;
+begin
+  frmCadastroCliente := TFrmCadastroCliente.Create(nil);
+  try
+    frmCadastroCliente.ShowModal;
+  finally
+    frmCadastroCliente.Free;
+  end
+
+end;
+
 procedure TFrmPrincipal.btnDeletarCardClick(Sender: TObject);
 var
   IDOrdem: Integer;
@@ -162,8 +177,8 @@ begin
     try
       Service.ValidarExclusao(dmPrincipal.qrListaOS.FieldByName('STATUS').AsString);
 
-      if MessageDlg('Deseja realmente excluir a Ordem de Serviço nº ' + IntToStr(IDOrdem) + '?' + #13#10 +
-        'Esta ação não pode ser desfeita.', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      if ConfirmarAcao('Deseja realmente excluir a Ordem de Serviço nº ' + IntToStr(IDOrdem) + '?' + #13#10 +
+        'Esta ação não pode ser desfeita.') then
       begin
         Service.Deletar(IDOrdem, dmPrincipal.ConexaoBanco);
         ShowMessage('Ordem de Serviço excluída com sucesso.');
