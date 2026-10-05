@@ -8,7 +8,8 @@ uses
   uDM in 'uDM.pas' {dmPrincipal: TDataModule},
   uFrmCadastroCliente in 'Views\uFrmCadastroCliente.pas' {FrmCadastroCliente},
   uFrmPrincipal in 'Views\uFrmPrincipal.pas' {FrmPrincipal},
-  uService.Imagem in 'Services\uService.Imagem.pas';
+  uService.Imagem in 'Services\uService.Imagem.pas',
+  uFrmAlterarStatus in 'Views\uFrmAlterarStatus.pas' {FrmAlterarStatus};
 
 {$R *.res}
 
@@ -17,5 +18,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TdmPrincipal, dmPrincipal);
   Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmAlterarStatus, FrmAlterarStatus);
   Application.Run;
 end.

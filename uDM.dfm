@@ -7,8 +7,8 @@ object dmPrincipal: TdmPrincipal
       'User_Name=sysdba'
       'Password=masterkey'
       'Database=C:\Users\leand\Desktop\novaselecao\ORDENS.FDB'
+      'CharacterSet=UTF8'
       'DriverID=FB')
-    Connected = True
     Left = 80
     Top = 48
   end

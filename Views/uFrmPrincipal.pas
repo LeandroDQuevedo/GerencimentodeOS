@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes,
-  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico;
+  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus;
 
 type
   TFrmPrincipal = class(TForm)
@@ -30,6 +30,7 @@ type
     DBImage1: TDBImage;
     lbNomeCliente: TLabel;
     Label1: TLabel;
+    btnAlterarStatus: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -37,6 +38,7 @@ type
     procedure btnAbrirCardClick(Sender: TObject);
     procedure btnDeletarCardClick(Sender: TObject);
     procedure ctrlGridOSPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+    procedure btnAlterarStatusClick(Sender: TObject);
   private
     FSQLOriginal: string;
   public
@@ -120,6 +122,28 @@ begin
   btnLocalizarClick(nil);
 end;
 
+procedure TFrmPrincipal.btnAlterarStatusClick(Sender: TObject);
+var
+  frmStatus: TFrmAlterarStatus;
+begin
+  if dmPrincipal.qrListaOS.IsEmpty then
+  begin
+    ShowMessage('Selecione uma Ordem de Serviço.');
+    Exit;
+  end;
+
+  frmStatus := TFrmAlterarStatus.Create(nil);
+  try
+    frmStatus.OrdemID := dmPrincipal.qrListaOS.FieldByName('ID').AsInteger;
+    frmStatus.StatusAtual := dmPrincipal.qrListaOS.FieldByName('STATUS').AsString;
+    frmStatus.ShowModal;
+  finally
+    frmStatus.Free;
+  end;
+
+  btnLocalizarClick(nil);
+end;
+
 procedure TFrmPrincipal.btnDeletarCardClick(Sender: TObject);
 var
   IDOrdem: Integer;
@@ -131,28 +155,26 @@ begin
     Exit;
   end;
 
-  if dmPrincipal.qrListaOS.FieldByName('STATUS').AsString <> STATUS_ABERTA then
-  begin
-    ShowMessage('Apenas Ordens de Serviço em ABERTO podem ser canceladas.');
-    Exit;
-  end;
+  IDOrdem := dmPrincipal.qrListaOS.FieldByName('ID').AsInteger;
 
-  if MessageDlg('Deseja realmente cancelar esta Ordem de Serviço?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    Service := TOrdemServicoService.Create;
+  Service := TOrdemServicoService.Create;
+  try
     try
-      IDOrdem := dmPrincipal.qrListaOS.FieldByName('ID').AsInteger;
+      Service.ValidarExclusao(dmPrincipal.qrListaOS.FieldByName('STATUS').AsString);
 
-      if Service.Deletar(IDOrdem, dmPrincipal.ConexaoBanco) then
+      if MessageDlg('Deseja realmente excluir a Ordem de Serviço nº ' + IntToStr(IDOrdem) + '?' + #13#10 +
+        'Esta ação não pode ser desfeita.', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
       begin
-        ShowMessage('Ordem de Serviço cancelada com sucesso.');
+        Service.Deletar(IDOrdem, dmPrincipal.ConexaoBanco);
+        ShowMessage('Ordem de Serviço excluída com sucesso.');
         btnLocalizarClick(nil);
-      end
-      else
-        ShowMessage('Erro ao tentar cancelar a Ordem de Serviço.');
-    finally
-      Service.Free;
+      end;
+    except
+      on E: Exception do
+        ShowMessage(E.Message);
     end;
+  finally
+    Service.Free;
   end;
 end;
 
@@ -160,7 +182,7 @@ procedure TFrmPrincipal.ctrlGridOSPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Int
 begin
   // Pinta só o cartão atual. Mudar DBCtrlGrid.Color repinta a grade inteira em loop.
   if dmPrincipal.qrListaOS.FieldByName('STATUS').AsString = STATUS_CANCELADA then
-    DBCtrlGrid.Canvas.Brush.Color := clRed
+    DBCtrlGrid.Canvas.Brush.Color := $006979E9
   else
     DBCtrlGrid.Canvas.Brush.Color := clWhite;
 

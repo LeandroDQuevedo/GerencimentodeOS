@@ -1,7 +1,7 @@
 object FrmPrincipal: TFrmPrincipal
   Left = 0
   Top = 0
-  Caption = 'FrmPrincipal'
+  Caption = 'Home'
   ClientHeight = 666
   ClientWidth = 1042
   Color = clBtnFace
@@ -21,7 +21,6 @@ object FrmPrincipal: TFrmPrincipal
     Height = 57
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1088
     DesignSize = (
       1042
       57)
@@ -63,7 +62,6 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 2
       OnClick = btnLocalizarClick
-      ExplicitLeft = 951
     end
   end
   object pnBotoes: TPanel
@@ -73,7 +71,6 @@ object FrmPrincipal: TFrmPrincipal
     Height = 609
     Align = alRight
     TabOrder = 1
-    ExplicitLeft = 944
     object btnInserir: TButton
       Left = 24
       Top = 40
@@ -101,6 +98,15 @@ object FrmPrincipal: TFrmPrincipal
       TabOrder = 2
       OnClick = btnDeletarCardClick
     end
+    object btnAlterarStatus: TButton
+      Left = 24
+      Top = 185
+      Width = 75
+      Height = 25
+      Caption = 'Alterar Status'
+      TabOrder = 3
+      OnClick = btnAlterarStatusClick
+    end
   end
   object Panel1: TPanel
     Left = 0
@@ -110,7 +116,6 @@ object FrmPrincipal: TFrmPrincipal
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 2
-    ExplicitWidth = 944
     object ctrlGridOS: TDBCtrlGrid
       Left = 1
       Top = 1
@@ -118,38 +123,56 @@ object FrmPrincipal: TFrmPrincipal
       Height = 607
       Align = alClient
       ColCount = 4
+      Color = clBtnFace
       DataSource = dmPrincipal.dsListaOS
       PanelHeight = 303
       PanelWidth = 219
+      ParentColor = False
       TabOrder = 0
       RowCount = 2
       OnPaintPanel = ctrlGridOSPaintPanel
-      ExplicitLeft = 33
-      ExplicitTop = -9
+      ExplicitLeft = -4
+      ExplicitTop = 6
       object lbNomeCliente: TLabel
-        Left = 15
+        Left = 6
         Top = 165
-        Width = 73
-        Height = 28
+        Width = 95
+        Height = 44
         Alignment = taCenter
+        AutoSize = False
         Caption = 'Cliente'
+        Color = clHighlight
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindow
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
         Transparent = False
       end
       object Label1: TLabel
         Left = 127
         Top = 165
-        Width = 73
-        Height = 28
+        Width = 64
+        Height = 13
         Alignment = taCenter
         Caption = 'Data Entrada'
       end
       object txtNomeCliente: TDBText
-        Left = 15
+        Left = 6
         Top = 181
-        Width = 73
+        Width = 95
         Height = 28
+        Alignment = taCenter
         DataField = 'NOME_CLIENTE'
         DataSource = dmPrincipal.dsListaOS
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindow
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
       end
       object txtStatusOS: TDBText
         Left = 0

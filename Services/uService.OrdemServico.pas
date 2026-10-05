@@ -14,6 +14,9 @@ type
     function RetornarOrdem(IDOrdem: Integer; Conexao: TFDConnection): TOrdemServico;
     function SalvarCliente(Cliente: TCliente; Conexao: TFDConnection): Boolean;
     function RetornaNumeroOSPorCliente(IDCliente: Integer; Conexao: TFDConnection): Integer;
+    function AlterarStatus(IDOrdem: Integer; StatusAtual, NovoStatus: string; Conexao: TFDConnection): Boolean;
+    procedure ValidarTrocaStatus(StatusAtual, NovoStatus: string);
+    procedure ValidarExclusao(Status: string);
   end;
 
 implementation
@@ -317,10 +320,13 @@ begin
     qrDeletar.Connection := Conexao;
     Conexao.StartTransaction;
     try
-      qrDeletar.SQL.Text := 'UPDATE ORDEM_SERVICO SET STATUS = :pStatus WHERE ID = :pID';
-      qrDeletar.ParamByName('pStatus').AsString := STATUS_CANCELADA;
+      // Itens primeiro: a FK_ITEM_ORDEM impede apagar a OS com itens vinculados
+      qrDeletar.SQL.Text := 'DELETE FROM ITEM_ORDEM WHERE ORDEM_ID = :pID';
       qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
+      qrDeletar.ExecSQL;
 
+      qrDeletar.SQL.Text := 'DELETE FROM ORDEM_SERVICO WHERE ID = :pID';
+      qrDeletar.ParamByName('pID').AsInteger := IDOrdem;
       qrDeletar.ExecSQL;
 
       Conexao.Commit;
@@ -360,6 +366,68 @@ begin
   finally
     qrNumOS.Free;
   end;
+end;
+
+procedure TOrdemServicoService.ValidarTrocaStatus(StatusAtual, NovoStatus: string);
+begin
+  if NovoStatus = StatusAtual then
+    raise Exception.Create('A Ordem de Serviço já está com a situação "' + NovoStatus + '".');
+
+  if (StatusAtual = STATUS_CONCLUIDA) or (StatusAtual = STATUS_CANCELADA) then
+    raise Exception.Create('Ordens de Serviço concluídas ou canceladas não podem mudar de situação.');
+
+  if (StatusAtual = STATUS_EM_ANDAMENTO) and (NovoStatus = STATUS_ABERTA) then
+    raise Exception.Create('Uma Ordem de Serviço em andamento não pode voltar para Aberta.');
+end;
+
+function TOrdemServicoService.AlterarStatus(IDOrdem: Integer; StatusAtual, NovoStatus: string; Conexao: TFDConnection): Boolean;
+var
+  qrStatus: TFDQuery;
+begin
+  ValidarTrocaStatus(StatusAtual, NovoStatus);
+
+  qrStatus := TFDQuery.Create(nil);
+  try
+    qrStatus.Connection := Conexao;
+    Conexao.StartTransaction;
+    try
+      qrStatus.SQL.Text :=
+        'UPDATE ORDEM_SERVICO SET STATUS = :pStatus, DATA_FECHAMENTO = :pDataFech ' +
+        'WHERE ID = :pID';
+
+      qrStatus.ParamByName('pStatus').AsString := NovoStatus;
+      qrStatus.ParamByName('pID').AsInteger := IDOrdem;
+
+      // Data de fechamento só existe quando a OS é encerrada
+      if (NovoStatus = STATUS_CONCLUIDA) or (NovoStatus = STATUS_CANCELADA) then
+        qrStatus.ParamByName('pDataFech').AsDate := Date
+      else
+      begin
+        qrStatus.ParamByName('pDataFech').DataType := ftDate;
+        qrStatus.ParamByName('pDataFech').Clear;
+      end;
+
+      qrStatus.ExecSQL;
+      Conexao.Commit;
+      Result := True;
+    except
+      on Erro: Exception do
+      begin
+        Conexao.Rollback;
+        raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
+      end;
+    end;
+  finally
+    qrStatus.Free;
+  end;
+end;
+
+
+procedure TOrdemServicoService.ValidarExclusao(Status: string);
+begin
+  if Status <> STATUS_ABERTA then
+    raise Exception.Create('Apenas Ordens de Serviço com situação Aberta podem ser excluídas.' + #13#10 +
+      'Para encerrar uma OS em andamento, altere a situação para Cancelada.');
 end;
 
 end.
