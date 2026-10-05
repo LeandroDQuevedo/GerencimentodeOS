@@ -1,0 +1,23 @@
+# Pastas de compilação do Delphi (o executável da entrega vai na pasta /bin)
+Win32/
+Win64/
+
+# Unidades compiladas
+*.dcu
+
+# Histórico e recuperação automática da IDE
+__history/
+__recovery/
+
+# Arquivos locais da IDE (configurações da máquina, não do projeto)
+*.local
+*.identcache
+*.stat
+*.dsk
+*.tvsconfig
+*.vlb
+*.~*
+
+# Banco de dados de testes (o script SQL de criação é que vai para o repositório)
+*.fdb
+*.FDB
