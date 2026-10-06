@@ -13,6 +13,7 @@ object FrmPrincipal: TFrmPrincipal
   OldCreateOrder = False
   WindowState = wsMaximized
   OnCreate = FormCreate
+  OnMouseWheel = FormMouseWheel
   PixelsPerInch = 96
   TextHeight = 13
   object pnFiltros: TPanel
@@ -105,6 +106,7 @@ object FrmPrincipal: TFrmPrincipal
       Height = 39
       Anchors = [akRight]
       Caption = 'Localizar'
+      Default = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -157,7 +159,7 @@ object FrmPrincipal: TFrmPrincipal
     object cbxStatus: TComboBox
       Left = 865
       Top = 31
-      Width = 64
+      Width = 80
       Height = 21
       Style = csDropDownList
       ItemIndex = 0
@@ -271,104 +273,144 @@ object FrmPrincipal: TFrmPrincipal
       Width = 961
       Height = 627
       Align = alClient
-      ColCount = 4
+      ColCount = 7
       Color = clBtnFace
       DataSource = dmPrincipal.dsListaOS
-      PanelHeight = 313
-      PanelWidth = 236
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      PanelHeight = 209
+      PanelWidth = 134
       ParentColor = False
+      ParentFont = False
       TabOrder = 0
-      RowCount = 2
       OnPaintPanel = ctrlGridOSPaintPanel
-      ExplicitWidth = 3533
-      ExplicitHeight = 606
+      ExplicitWidth = 955
+      ExplicitHeight = 939
       object lbNomeCliente: TLabel
-        Left = 6
-        Top = 165
-        Width = 95
-        Height = 44
-        Alignment = taCenter
+        Left = 7
+        Top = 198
+        Width = 55
+        Height = 13
         AutoSize = False
-        Caption = 'Cliente'
-        Color = clHighlight
+        Caption = 'CLIENTE'
+        Color = 7456511
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindow
-        Font.Height = -11
+        Font.Color = clGray
+        Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentColor = False
         ParentFont = False
-        Transparent = False
-      end
-      object Label1: TLabel
-        Left = 127
-        Top = 165
-        Width = 64
-        Height = 13
-        Alignment = taCenter
-        Caption = 'Data Entrada'
+        Transparent = True
       end
       object txtNomeCliente: TDBText
-        Left = 6
-        Top = 181
-        Width = 95
-        Height = 28
-        Alignment = taCenter
+        Left = 7
+        Top = 215
+        Width = 224
+        Height = 15
+        Color = clBlack
         DataField = 'NOME_CLIENTE'
         DataSource = dmPrincipal.dsListaOS
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindow
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentColor = False
         ParentFont = False
       end
       object txtStatusOS: TDBText
         Left = 0
-        Top = 5
-        Width = 219
+        Top = 6
+        Width = 236
         Height = 28
         Alignment = taCenter
         DataField = 'STATUS'
         DataSource = dmPrincipal.dsListaOS
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = 25
-        Font.Name = 'Roboto'
-        Font.Style = []
+        Font.Color = clWhite
+        Font.Height = -15
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
         ParentFont = False
         ParentShowHint = False
         ShowHint = False
       end
       object txtValorTotal: TDBText
-        Left = 61
-        Top = 231
-        Width = 83
-        Height = 18
-        Alignment = taCenter
+        Left = 122
+        Top = 244
+        Width = 109
+        Height = 24
+        Alignment = taRightJustify
         DataField = 'VALOR_TOTAL'
         DataSource = dmPrincipal.dsListaOS
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = 15
-        Font.Name = 'Roboto'
-        Font.Style = [fsUnderline]
+        Font.Height = -15
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
         ParentFont = False
       end
       object txtDataOS: TDBText
         Left = 127
-        Top = 181
-        Width = 73
+        Top = 38
+        Width = 109
         Height = 12
-        Alignment = taCenter
+        Alignment = taRightJustify
         DataField = 'DATA_ABERTURA'
         DataSource = dmPrincipal.dsListaOS
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object txtNumeroOS: TDBText
+        Left = 6
+        Top = 38
+        Width = 115
+        Height = 28
+        DataField = 'ID'
+        DataSource = dmPrincipal.dsListaOS
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clDefault
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = False
+      end
+      object Bevel1: TBevel
+        Left = 0
+        Top = 236
+        Width = 236
+        Height = 2
+        Shape = bsTopLine
+      end
+      object txtDataPrev: TDBText
+        Left = 7
+        Top = 247
+        Width = 109
+        Height = 12
+        DataField = 'DATA_PREVISTA'
+        DataSource = dmPrincipal.dsListaOS
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
       object DBImage1: TDBImage
-        Left = 56
-        Top = 39
-        Width = 105
-        Height = 105
+        Left = 60
+        Top = 72
+        Width = 120
+        Height = 120
         DataField = 'MINIATURA'
         DataSource = dmPrincipal.dsListaOS
         Proportional = True

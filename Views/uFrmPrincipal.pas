@@ -28,7 +28,6 @@ type
     txtDataOS: TDBText;
     DBImage1: TDBImage;
     lbNomeCliente: TLabel;
-    Label1: TLabel;
     btnAlterarStatus: TButton;
     btnClientes: TButton;
     edtDataFim: TMaskEdit;
@@ -48,6 +47,9 @@ type
     lbValores: TLabel;
     lbStatus: TLabel;
     edtLimite: TEdit;
+    txtNumeroOS: TDBText;
+    Bevel1: TBevel;
+    txtDataPrev: TDBText;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -57,6 +59,8 @@ type
     procedure ctrlGridOSPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
     procedure btnAlterarStatusClick(Sender: TObject);
     procedure btnClientesClick(Sender: TObject);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   private
     FSQLOriginal: string;
   public
@@ -75,6 +79,24 @@ begin
 
   // O ctrlGridOS precisa de estar ligado ao DataSource, da mesma forma que a Grid antiga
   btnLocalizarClick(nil);
+end;
+
+procedure TFrmPrincipal.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  // Só rola se o mouse estiver em cima do grid e a lista estiver aberta
+  if not dmPrincipal.qrListaOS.Active then
+    Exit;
+  if not PtInRect(ctrlGridOS.ClientRect, ctrlGridOS.ScreenToClient(MousePos)) then
+    Exit;
+
+  // Cada "clique" da rodinha anda uma linha de cartões
+  if WheelDelta < 0 then
+    dmPrincipal.qrListaOS.MoveBy(ctrlGridOS.ColCount)
+  else
+    dmPrincipal.qrListaOS.MoveBy(-ctrlGridOS.ColCount);
+
+  Handled := True;
 end;
 
 procedure TFrmPrincipal.btnLocalizarClick(Sender: TObject);
@@ -225,14 +247,52 @@ begin
 end;
 
 procedure TFrmPrincipal.ctrlGridOSPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+const
+  ALTURA_FAIXA = 30;
+  ALTURA_SELO = 22;
+var
+  Status: string;
+  CorFaixa: TColor;
+  Selo: TRect;
 begin
-  // Pinta só o cartão atual. Mudar DBCtrlGrid.Color repinta a grade inteira em loop.
-  if dmPrincipal.qrListaOS.FieldByName('STATUS').AsString = STATUS_CANCELADA then
-    DBCtrlGrid.Canvas.Brush.Color := $006979E9
-  else
-    DBCtrlGrid.Canvas.Brush.Color := clWhite;
+  // Desenha só o cartão atual (mudar DBCtrlGrid.Color repintaria a grade inteira em loop)
+  Status := dmPrincipal.qrListaOS.FieldByName('STATUS').AsString;
 
+  if Status = STATUS_ABERTA then
+    CorFaixa := $00C07830              // azul
+  else if Status = STATUS_EM_ANDAMENTO then
+    CorFaixa := $000080FF              // laranja
+  else if Status = STATUS_CONCLUIDA then
+    CorFaixa := $0050A050              // verde
+  else
+    CorFaixa := $00909090;             // cinza (cancelada)
+
+  // Fundo branco
+  DBCtrlGrid.Canvas.Brush.Color := clWhite;
   DBCtrlGrid.Canvas.FillRect(Rect(0, 0, DBCtrlGrid.PanelWidth, DBCtrlGrid.PanelHeight));
+
+  // Faixa da situação
+  DBCtrlGrid.Canvas.Brush.Color := CorFaixa;
+  DBCtrlGrid.Canvas.FillRect(Rect(0, 0, DBCtrlGrid.PanelWidth, ALTURA_FAIXA));
+
+  // Borda do cartão
+  DBCtrlGrid.Canvas.Pen.Color := $00D0D0D0;
+  DBCtrlGrid.Canvas.Brush.Style := bsClear;
+  DBCtrlGrid.Canvas.Rectangle(0, 0, DBCtrlGrid.PanelWidth, DBCtrlGrid.PanelHeight);
+  DBCtrlGrid.Canvas.Brush.Style := bsSolid;
+
+  // Selo de atraso, só nas atrasadas
+  if TOrdemServico.CalcularAtraso(Status, dmPrincipal.qrListaOS.FieldByName('DATA_PREVISTA').AsDateTime) then
+  begin
+    Selo := Rect(40, DBCtrlGrid.PanelHeight - ALTURA_SELO - 8,
+                 DBCtrlGrid.PanelWidth - 40, DBCtrlGrid.PanelHeight - 8);
+    DBCtrlGrid.Canvas.Brush.Color := clRed;
+    DBCtrlGrid.Canvas.FillRect(Selo);
+    DBCtrlGrid.Canvas.Font.Color := clWhite;
+    DBCtrlGrid.Canvas.Font.Style := [fsBold];
+    DrawText(DBCtrlGrid.Canvas.Handle, PChar('ATRASADA'), -1, Selo,
+             DT_CENTER or DT_VCENTER or DT_SINGLELINE);
+  end;
 end;
 
 

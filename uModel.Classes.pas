@@ -75,6 +75,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    class function CalcularAtraso(Status: string; DataPrevista: TDate): Boolean;
+    function EstaAtrasada: Boolean;
 
     procedure Validar;
     procedure RecalcularTotal;
@@ -160,4 +162,15 @@ begin
     raise Exception.Create('O status da Ordem de Serviço é obrigatório.');
 end;
 
+
+class function TOrdemServico.CalcularAtraso(Status: string; DataPrevista: TDate): Boolean;
+begin
+  Result := (DataPrevista > 0) and (Date > DataPrevista) and
+            (Status <> STATUS_CONCLUIDA) and (Status <> STATUS_CANCELADA);
+end;
+
+function TOrdemServico.EstaAtrasada: Boolean;
+begin
+  Result := CalcularAtraso(FStatus, FDataPrevista);
+end;
 end.

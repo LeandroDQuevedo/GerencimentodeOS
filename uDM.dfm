@@ -5015,6 +5015,7 @@ object dmPrincipal: TdmPrincipal
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
+      DisplayFormat = '"OS n'#186' "0'
     end
     object qrListaOSDATA_ABERTURA: TDateField
       FieldName = 'DATA_ABERTURA'
@@ -5050,7 +5051,7 @@ object dmPrincipal: TdmPrincipal
     object qrListaOSDATA_PREVISTA: TDateField
       FieldName = 'DATA_PREVISTA'
       Origin = 'DATA_PREVISTA'
-      DisplayFormat = 'dd/mm/yyyy'
+      DisplayFormat = '"Prev. "dd/mm/yyyy'
     end
   end
   object dsListaOS: TDataSource
