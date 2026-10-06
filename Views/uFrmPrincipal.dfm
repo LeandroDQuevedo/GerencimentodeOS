@@ -95,7 +95,7 @@ object FrmPrincipal: TFrmPrincipal
       Top = 136
       Width = 75
       Height = 25
-      Caption = 'Cancelar'
+      Caption = 'Excluir'
       TabOrder = 2
       OnClick = btnDeletarCardClick
     end

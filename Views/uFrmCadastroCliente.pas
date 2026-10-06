@@ -58,21 +58,25 @@ begin
     Exit;
   end;
 
-  FCliente := TCliente.Create;
-  FCliente.Id := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
-  FCliente.Nome := dmPrincipal.qrCliente.FieldByName('NOME').AsString;
-  FCliente.Email := dmPrincipal.qrCliente.FieldByName('EMAIL').AsString;
-  FCliente.Telefone := dmPrincipal.qrCliente.FieldByName('TELEFONE').AsString;
-  FCliente.Documento := dmPrincipal.qrCliente.FieldByName('DOCUMENTO').AsString;
 
-  edtNome.Text := FCliente.Nome;
-  edtEmail.Text := FCliente.Email;
-  edtTelefone.Text := FCliente.Telefone;
-  mktCPF.Text := FCliente.Documento;
+  try
+    FCliente := TCliente.Create;
+    FCliente.Id := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
+    FCliente.Nome := dmPrincipal.qrCliente.FieldByName('NOME').AsString;
+    FCliente.Email := dmPrincipal.qrCliente.FieldByName('EMAIL').AsString;
+    FCliente.Telefone := dmPrincipal.qrCliente.FieldByName('TELEFONE').AsString;
+    FCliente.Documento := dmPrincipal.qrCliente.FieldByName('DOCUMENTO').AsString;
 
-  IDEdicao := FCliente.Id;
-  btnSalvar.Caption := 'Atualizar';
-  FCliente.Free;
+    edtNome.Text := FCliente.Nome;
+    edtEmail.Text := FCliente.Email;
+    edtTelefone.Text := FCliente.Telefone;
+    mktCPF.Text := FCliente.Documento;
+
+    IDEdicao := FCliente.Id;
+    btnSalvar.Caption := 'Atualizar';
+  finally
+    FCliente.Free;
+  end;
 end;
 
 procedure TFrmCadastroCliente.btnCancelarClick(Sender: TObject);

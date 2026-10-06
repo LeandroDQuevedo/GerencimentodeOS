@@ -3,7 +3,7 @@ unit uFrmCadastroOS;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, uFuncoes,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.Imaging.jpeg, Vcl.Imaging.pngimage,
   uService.Imagem, Vcl.ExtCtrls, Vcl.ExtDlgs, Vcl.ComCtrls, uFrmCadastroCliente, uModel.Classes, uService.OrdemServico, uDM;
 
@@ -29,10 +29,16 @@ type
 
     OpenPictureDialog1: TOpenPictureDialog;
     Panel1: TPanel;
-    BtnSalvar: TButton;
-    BtnCancelar: TButton;
+    btnSalvar: TButton;
+    btnCancelar: TButton;
     LsvMovimentacoes: TListView;
     Panel2: TPanel;
+    btnRemoveItem: TButton;
+    btnAlterarItem: TButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    edtTotal: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -40,9 +46,13 @@ type
     procedure btnAdicionarFotoClick(Sender: TObject);
     procedure btnAddClienteClick(Sender: TObject);
     procedure btnAdicionarItemClick(Sender: TObject);
-    procedure BtnSalvarClick(Sender: TObject);
-    procedure BtnCancelarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnRemoveItemClick(Sender: TObject);
+    procedure btnAlterarItemClick(Sender: TObject);
+    procedure edtValorChange(Sender: TObject);
   private
+    IndiceItemEdicao : Integer;
     FOrdem: TOrdemServico;
     procedure AtualizarListaVisual;
     procedure CarregarDadosEdicao;
@@ -71,10 +81,10 @@ begin
   LsvMovimentacoes.Columns[1].Width := 80;
   LsvMovimentacoes.Columns.Add.Caption := 'Val. Unitário';
   LsvMovimentacoes.Columns[2].Width := 100;
-//  LsvMovimentacoes.Columns[2].Currency := True;
   LsvMovimentacoes.Columns.Add.Caption := 'Total';
   LsvMovimentacoes.Columns[3].Width := 100;
-//  LsvMovimentacoes.Columns[3].Currency := True;
+
+  IndiceItemEdicao := -1;
 end;
 
 procedure TFrmCadastroOS.FormDestroy(Sender: TObject);
@@ -139,14 +149,23 @@ begin
     Exit;
   end;
 
-  // Criação do item
-  FItem := TItemOrdem.Create;
+
+  // Adição e recálculo
+  if IndiceItemEdicao = -1 then
+  begin
+    FItem := TItemOrdem.Create;
+    FOrdem.Itens.Add(FItem);
+  end
+  else
+  begin
+    FItem := FOrdem.Itens[IndiceItemEdicao];
+    IndiceItemEdicao := -1;
+    btnAdicionarItem.Caption := 'Adicionar';
+  end;
+
   FItem.Descricao := Trim(edtDescricaoItem.Text);
   FItem.Quantidade := StrToFloat(edtQntd.Text);
   FItem.ValorUnitario := StrToCurr(edtValor.Text);
-
-  // Adição e recálculo
-  FOrdem.Itens.Add(FItem);
   FOrdem.RecalcularTotal;
   AtualizarListaVisual;
 
@@ -156,6 +175,47 @@ begin
   edtValor.Text := '';
   edtDescricaoItem.SetFocus;
 end;
+
+procedure TFrmCadastroOS.btnAlterarItemClick(Sender: TObject);
+var
+  FItem : TItemOrdem;
+begin
+  if LsvMovimentacoes.Selected = nil then
+  begin
+    ShowMessage('Selecione um Item.');
+    Exit;
+  end;
+
+  btnAdicionarItem.Caption := '*Confirmar*';
+  FItem := FOrdem.Itens[LsvMovimentacoes.ItemIndex];
+  IndiceItemEdicao := LsvMovimentacoes.ItemIndex;
+  edtDescricaoItem.Text := FItem.Descricao;
+  edtValor.Text := CurrToStr(FItem.ValorUnitario);
+  edtQntd.Text := FloatToStr(FItem.Quantidade);
+end;
+
+procedure TFrmCadastroOS.btnRemoveItemClick(Sender: TObject);
+begin
+  if LsvMovimentacoes.Selected = nil then
+  begin
+    ShowMessage('Selecione um Item.');
+    Exit;
+  end;
+  if ConfirmarAcao('Deseja remover o item da lista?') then
+  begin
+    FOrdem.Itens.Delete(LsvMovimentacoes.ItemIndex);
+    edtDescricaoItem.Text := '';
+    edtQntd.Text := '';
+    edtValor.Text := '';
+    edtDescricaoItem.SetFocus;
+    IndiceItemEdicao := -1;
+    btnAdicionarItem.Caption := 'Adicionar';
+    FOrdem.RecalcularTotal;
+    AtualizarListaVisual;
+  end;
+
+end;
+
 
 procedure TFrmCadastroOS.AtualizarListaVisual;
 var
@@ -174,7 +234,7 @@ begin
   end;
 end;
 
-procedure TFrmCadastroOS.BtnSalvarClick(Sender: TObject);
+procedure TFrmCadastroOS.btnSalvarClick(Sender: TObject);
 var
   Service: TOrdemServicoService;
 begin
@@ -241,10 +301,11 @@ begin
 
 end;
 
-procedure TFrmCadastroOS.BtnCancelarClick(Sender: TObject);
+procedure TFrmCadastroOS.btnCancelarClick(Sender: TObject);
 begin
   Close;
 end;
+
 
 procedure TFrmCadastroOS.FormShow(Sender: TObject);
   begin
@@ -253,6 +314,7 @@ procedure TFrmCadastroOS.FormShow(Sender: TObject);
       CarregarDadosEdicao;
     end;
   end;
+
 
 procedure TFrmCadastroOS.CarregarDadosEdicao;
 var
@@ -284,6 +346,20 @@ begin
   finally
     Service.Free;
   end;
+end;
+
+procedure TFrmCadastroOS.edtValorChange(Sender: TObject);
+var
+  total : Currency;
+begin
+  if (edtValor.Text <> '') and (edtQntd.Text <> '') then
+  begin
+    total := (StrToCurrDef(edtValor.Text,0) * StrToCurrDef(edtQntd.Text,0));
+    edtTotal.Text := 'R$' + FormatFloat('#,##0.00', total);
+  end
+  else
+    edtTotal.Text := '';
+
 end;
 
 end.

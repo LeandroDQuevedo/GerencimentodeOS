@@ -1,9 +1,9 @@
 object FrmCadastroOS: TFrmCadastroOS
-  Left = 0
-  Top = 0
+  Left = 617
+  Top = 309
   Caption = 'FrmCadastroOS'
-  ClientHeight = 490
-  ClientWidth = 725
+  ClientHeight = 543
+  ClientWidth = 771
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,7 @@ object FrmCadastroOS: TFrmCadastroOS
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesigned
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
@@ -119,12 +120,14 @@ object FrmCadastroOS: TFrmCadastroOS
   end
   object Panel1: TPanel
     Left = 0
-    Top = 431
-    Width = 725
+    Top = 484
+    Width = 771
     Height = 59
     Align = alBottom
     TabOrder = 5
-    object BtnSalvar: TButton
+    ExplicitTop = 431
+    ExplicitWidth = 725
+    object btnSalvar: TButton
       Left = 56
       Top = 6
       Width = 97
@@ -132,9 +135,9 @@ object FrmCadastroOS: TFrmCadastroOS
       Caption = 'Salvar'
       Default = True
       TabOrder = 0
-      OnClick = BtnSalvarClick
+      OnClick = btnSalvarClick
     end
-    object BtnCancelar: TButton
+    object btnCancelar: TButton
       Left = 517
       Top = 14
       Width = 97
@@ -142,17 +145,22 @@ object FrmCadastroOS: TFrmCadastroOS
       Cancel = True
       Caption = 'Cancelar'
       TabOrder = 1
-      OnClick = BtnCancelarClick
+      OnClick = btnCancelarClick
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 224
-    Width = 725
-    Height = 207
+    Top = 231
+    Width = 771
+    Height = 253
     Align = alBottom
     Caption = 'Panel2'
     TabOrder = 6
+    ExplicitTop = 239
+    ExplicitWidth = 725
+    DesignSize = (
+      771
+      253)
     object lbDescricao: TLabel
       Left = 84
       Top = 21
@@ -166,11 +174,33 @@ object FrmCadastroOS: TFrmCadastroOS
       Font.Style = []
       ParentFont = False
     end
+    object Label1: TLabel
+      Left = 260
+      Top = 56
+      Width = 112
+      Height = 18
+      Caption = 'R$'
+    end
+    object Label2: TLabel
+      Left = 382
+      Top = 56
+      Width = 6
+      Height = 13
+      Caption = 'X'
+    end
+    object Label3: TLabel
+      Left = 473
+      Top = 57
+      Width = 8
+      Height = 13
+      Caption = '='
+    end
     object edtDescricao: TEdit
       Left = 16
       Top = 40
       Width = 217
-      Height = 23
+      Height = 207
+      AutoSize = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = 15
@@ -182,62 +212,94 @@ object FrmCadastroOS: TFrmCadastroOS
     end
     object LsvMovimentacoes: TListView
       Left = 260
-      Top = 56
-      Width = 430
-      Height = 145
-      Columns = <
-        item
-          Caption = 'Descri'#231#227'o'
-        end
-        item
-          Caption = 'Valor Unit'#225'rio'
-        end
-        item
-          Caption = 'Quantidade'
-        end>
+      Top = 80
+      Width = 493
+      Height = 167
+      Anchors = [akLeft, akTop, akRight]
+      Columns = <>
+      RowSelect = True
       TabOrder = 1
       ViewStyle = vsReport
     end
     object edtDescricaoItem: TEdit
       Left = 260
       Top = 21
-      Width = 121
+      Width = 301
       Height = 21
       TabOrder = 2
       TextHint = 'Descri'#231#227'o...'
     end
     object edtQntd: TEdit
-      Left = 502
-      Top = 21
-      Width = 121
+      Left = 394
+      Top = 53
+      Width = 73
       Height = 21
-      NumbersOnly = True
       TabOrder = 3
       TextHint = 'Quantidade...'
+      OnChange = edtValorChange
     end
     object edtValor: TEdit
-      Left = 384
-      Top = 21
-      Width = 116
+      Left = 276
+      Top = 53
+      Width = 97
       Height = 21
       TabOrder = 4
       TextHint = 'Valor Unit'#225'rio'
+      OnChange = edtValorChange
     end
-  end
-  object btnAdicionarItem: TButton
-    Left = 630
-    Top = 245
-    Width = 60
-    Height = 21
-    Caption = '+ add'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
-    Font.Style = [fsBold]
-    ParentFont = False
-    TabOrder = 7
-    OnClick = btnAdicionarItemClick
+    object btnAdicionarItem: TButton
+      Left = 573
+      Top = 10
+      Width = 100
+      Height = 21
+      Caption = 'Adicionar'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+      OnClick = btnAdicionarItemClick
+    end
+    object btnRemoveItem: TButton
+      Left = 573
+      Top = 54
+      Width = 100
+      Height = 21
+      Caption = 'Remover'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 6
+      OnClick = btnRemoveItemClick
+    end
+    object btnAlterarItem: TButton
+      Left = 573
+      Top = 32
+      Width = 100
+      Height = 21
+      Caption = 'Alterar'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 7
+      OnClick = btnAlterarItemClick
+    end
+    object edtTotal: TEdit
+      Left = 486
+      Top = 53
+      Width = 75
+      Height = 21
+      Enabled = False
+      TabOrder = 8
+    end
   end
   object OpenPictureDialog1: TOpenPictureDialog
     Filter = 
@@ -248,7 +310,7 @@ object FrmCadastroOS: TFrmCadastroOS
       'p)|*.jpg|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Me' +
       'tafiles (*.wmf)|*.wmf|TIFF Images (*.tif)|*.tif|TIFF Images (*.t' +
       'iff)|*.tiff'
-    Left = 224
-    Top = 192
+    Left = 248
+    Top = 176
   end
 end
