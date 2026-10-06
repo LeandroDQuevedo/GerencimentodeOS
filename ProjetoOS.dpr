@@ -11,7 +11,8 @@ uses
   uService.Imagem in 'Services\uService.Imagem.pas',
   uFrmAlterarStatus in 'Views\uFrmAlterarStatus.pas' {FrmAlterarStatus},
   uService.Cliente in 'Services\uService.Cliente.pas',
-  uFuncoes in 'Views\uFuncoes.pas';
+  uFuncoes in 'Views\uFuncoes.pas',
+  uFrmRelatorio in 'Views\uFrmRelatorio.pas' {FrmRelatorio};
 
 {$R *.res}
 
@@ -20,5 +21,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TdmPrincipal, dmPrincipal);
   Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmRelatorio, FrmRelatorio);
   Application.Run;
 end.

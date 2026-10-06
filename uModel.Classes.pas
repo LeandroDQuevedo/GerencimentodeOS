@@ -15,7 +15,7 @@ type
   TFiltroOS = record
     DataIni: TDate;
     DataFim: TDate;
-    Status: string;
+    Status: <tstring>;
     NomeCliente: string;
     ValorMin: Currency;
     ValorMax: Currency;

@@ -126,6 +126,10 @@
         </DCCReference>
         <DCCReference Include="Services\uService.Cliente.pas"/>
         <DCCReference Include="Views\uFuncoes.pas"/>
+        <DCCReference Include="Views\uFrmRelatorio.pas">
+            <Form>FrmRelatorio</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
