@@ -16,6 +16,7 @@ type
     function AlterarStatus(IDOrdem: Integer; StatusAtual, NovoStatus: string; Conexao: TFDConnection): Boolean;
     procedure ValidarTrocaStatus(StatusAtual, NovoStatus: string);
     procedure ValidarExclusao(Status: string);
+    procedure AplicarFiltro(Query: TFDQuery; SQLBase: string; Filtro: TFiltroOS; OrdenarPor: string);
   end;
 
 implementation
@@ -384,6 +385,48 @@ begin
   if Status <> STATUS_ABERTA then
     raise Exception.Create('Apenas Ordens de Serviço com situação Aberta podem ser excluídas.' + #13#10 +
       'Para encerrar uma OS em andamento, altere a situação para Cancelada.');
+end;
+
+procedure TOrdemServicoService.AplicarFiltro(Query: TFDQuery; SQLBase: string; Filtro: TFiltroOS; OrdenarPor: string);
+begin
+  Query.Close;
+  Query.SQL.Clear;
+  Query.SQL.Add(SQLBase);
+
+  if Filtro.DataIni > 0 then
+    Query.SQL.Add('AND OS.DATA_ABERTURA >= :pDataIni');
+  if Filtro.DataFim > 0 then
+    Query.SQL.Add('AND OS.DATA_ABERTURA <= :pDataFim');
+  if Filtro.Status <> '' then
+    Query.SQL.Add('AND OS.STATUS = :pStatus');
+  if Trim(Filtro.NomeCliente) <> '' then
+    Query.SQL.Add('AND UPPER(C.NOME) LIKE :pNome');
+  if Filtro.ValorMin > 0 then
+    Query.SQL.Add('AND OS.VALOR_TOTAL >= :pValorMin');
+  if Filtro.ValorMax > 0 then
+    Query.SQL.Add('AND OS.VALOR_TOTAL <= :pValorMax');
+  if Filtro.NumeroOS > 0 then
+    Query.SQL.Add('AND OS.ID = :pNumeroOS');
+  if OrdenarPor <> '' then
+    Query.SQL.Add(OrdenarPor);
+
+  if Filtro.DataIni > 0 then
+    Query.ParamByName('pDataIni').AsDate := Filtro.DataIni;
+  if Filtro.DataFim > 0 then
+    Query.ParamByName('pDataFim').AsDate := Filtro.DataFim;
+  if Filtro.Status <> '' then
+    Query.ParamByName('pStatus').AsString := Filtro.Status;
+  if Trim(Filtro.NomeCliente) <> '' then
+    Query.ParamByName('pNome').AsString := '%' + UpperCase(Trim(Filtro.NomeCliente)) + '%';
+  if Filtro.ValorMin > 0 then
+    Query.ParamByName('pValorMin').AsCurrency := Filtro.ValorMin;
+  if Filtro.ValorMax > 0 then
+    Query.ParamByName('pValorMax').AsCurrency := Filtro.ValorMax;
+    if Filtro.NumeroOS > 0 then
+    Query.ParamByName('pNumeroOS').AsInteger := Filtro.NumeroOS;
+
+  if Query.Params.FindParam('pLimite') <> nil then
+    Query.ParamByName('pLimite').AsInteger := Filtro.Limite;
 end;
 
 end.

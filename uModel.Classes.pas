@@ -11,6 +11,19 @@ const
   STATUS_CONCLUIDA    = 'Concluída';
   STATUS_CANCELADA    = 'Cancelada';
 type
+
+  TFiltroOS = record
+    DataIni: TDate;
+    DataFim: TDate;
+    Status: string;
+    NomeCliente: string;
+    ValorMin: Currency;
+    ValorMax: Currency;
+    Limite: Integer;
+    NumeroOS: Integer;
+  end;
+
+
   TCliente = class
   private
     FId: Integer;

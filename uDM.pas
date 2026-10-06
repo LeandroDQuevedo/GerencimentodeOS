@@ -32,6 +32,7 @@ type
     qrClienteTELEFONE: TWideStringField;
     qrClienteDATACADASTRO: TSQLTimeStampField;
     qrListaOSMINIATURA: TBlobField;
+    qrListaOSDATA_PREVISTA: TDateField;
   private
     { Private declarations }
   public

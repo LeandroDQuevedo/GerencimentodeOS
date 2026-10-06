@@ -9,6 +9,7 @@ object dmPrincipal: TdmPrincipal
       'Database=C:\Users\leand\Desktop\novaselecao\ORDENS.FDB'
       'CharacterSet=UTF8'
       'DriverID=FB')
+    Connected = True
     Left = 80
     Top = 48
   end
@@ -4996,11 +4997,19 @@ object dmPrincipal: TdmPrincipal
     Connection = ConexaoBanco
     SQL.Strings = (
       
-        'SELECT '#10'  OS.ID,'#10'  OS.DATA_ABERTURA,'#10'  OS.STATUS,'#10'  OS.VALOR_TOT' +
-        'AL, OS.MINIATURA,'#10'  C.NOME AS NOME_CLIENTE'#10'FROM ORDEM_SERVICO OS' +
-        #10'INNER JOIN CLIENTE C ON (OS.CLIENTE_ID = C.ID)')
+        'SELECT FIRST (:pLimite)'#10'  OS.ID, OS.DATA_ABERTURA, OS.DATA_PREVI' +
+        'STA, OS.STATUS,'#10'  OS.VALOR_TOTAL, OS.MINIATURA, C.NOME AS NOME_C' +
+        'LIENTE'#10'FROM ORDEM_SERVICO OS'#10'INNER JOIN CLIENTE C ON (OS.CLIENTE' +
+        '_ID = C.ID)'#10'WHERE 1 = 1')
     Left = 312
     Top = 416
+    ParamData = <
+      item
+        Name = 'PLIMITE'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 50
+      end>
     object qrListaOSID: TIntegerField
       FieldName = 'ID'
       Origin = 'ID'
@@ -5037,6 +5046,11 @@ object dmPrincipal: TdmPrincipal
     object qrListaOSMINIATURA: TBlobField
       FieldName = 'MINIATURA'
       Origin = 'MINIATURA'
+    end
+    object qrListaOSDATA_PREVISTA: TDateField
+      FieldName = 'DATA_PREVISTA'
+      Origin = 'DATA_PREVISTA'
+      DisplayFormat = 'dd/mm/yyyy'
     end
   end
   object dsListaOS: TDataSource

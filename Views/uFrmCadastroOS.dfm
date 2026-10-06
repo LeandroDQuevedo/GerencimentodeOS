@@ -76,19 +76,19 @@ object FrmCadastroOS: TFrmCadastroOS
   object edtDataEnt: TMaskEdit
     Left = 268
     Top = 123
-    Width = 120
+    Width = 118
     Height = 21
-    EditMask = '!99/99/0000;1;_'
+    EditMask = '!99/99/9999;1;_'
     MaxLength = 10
     TabOrder = 1
     Text = '  /  /    '
   end
   object edtDataPrev: TMaskEdit
     Left = 471
-    Top = 123
-    Width = 120
+    Top = 126
+    Width = 118
     Height = 21
-    EditMask = '!99/99/0000;1;_'
+    EditMask = '!99/99/9999;1;_'
     MaxLength = 10
     TabOrder = 2
     Text = '  /  /    '

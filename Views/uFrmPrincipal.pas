@@ -5,15 +5,14 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uFuncoes, uFrmCadastroCliente,
-  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus;
+  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus,
+  Vcl.Mask;
 
 type
   TFrmPrincipal = class(TForm)
     pnFiltros: TPanel;
     btnInserir: TButton;
     btnLocalizar: TButton;
-    edtPesquisa: TEdit;
-    cbxFiltros: TComboBox;
 
     // Componente de grelha de cartões
     ctrlGridOS: TDBCtrlGrid;
@@ -32,6 +31,23 @@ type
     Label1: TLabel;
     btnAlterarStatus: TButton;
     btnClientes: TButton;
+    edtDataFim: TMaskEdit;
+    edtDataIni: TMaskEdit;
+    lbDataEnt: TLabel;
+    lbDataFin: TLabel;
+    lbDataIn: TLabel;
+    lbNumOs: TLabel;
+    edtNumOS: TEdit;
+    lbCliente: TLabel;
+    edtCliente: TEdit;
+    cbxStatus: TComboBox;
+    edtValorMin: TEdit;
+    edtValorMax: TEdit;
+    lbVlrMin: TLabel;
+    lbVlrMax: TLabel;
+    lbValores: TLabel;
+    lbStatus: TLabel;
+    edtLimite: TEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -58,35 +74,50 @@ begin
   FSQLOriginal := dmPrincipal.qrListaOS.SQL.Text;
 
   // O ctrlGridOS precisa de estar ligado ao DataSource, da mesma forma que a Grid antiga
-  dmPrincipal.qrListaOS.Open;
   btnLocalizarClick(nil);
 end;
 
-
 procedure TFrmPrincipal.btnLocalizarClick(Sender: TObject);
+var
+  Filtro: TFiltroOS;
+  Service: TOrdemServicoService;
 begin
-  dmPrincipal.qrListaOS.Close;
-  dmPrincipal.qrListaOS.SQL.Clear;
-  dmPrincipal.qrListaOS.SQL.Add(FSQLOriginal);
-
-  if (Trim(edtPesquisa.Text) <> '') and (cbxFiltros.ItemIndex >= 0) then
+  if (Filtro.DataIni > 0) and (Filtro.DataFim > 0) and (Filtro.DataIni > Filtro.DataFim) then
   begin
-    dmPrincipal.qrListaOS.SQL.Add('WHERE');
-    case cbxFiltros.ItemIndex of
-      0:
-      begin
-        dmPrincipal.qrListaOS.SQL.Add(' OS.ID = :pFiltro');
-        dmPrincipal.qrListaOS.ParamByName('pFiltro').AsInteger := StrToIntDef(edtPesquisa.Text, 0);
-      end;
-      1:
-      begin
-        dmPrincipal.qrListaOS.SQL.Add(' UPPER(C.NOME) LIKE :pFiltro');
-        dmPrincipal.qrListaOS.ParamByName('pFiltro').AsString := '%' + UpperCase(Trim(edtPesquisa.Text)) + '%';
-      end;
-    end;
+    ShowMessage('A data inicial não pode ser maior que a data final.');
+    Exit;
   end;
 
-  dmPrincipal.qrListaOS.Open;
+  if (edtDataIni.Text <> '  /  /    ') and (Pos(' ', edtDataIni.Text) > 0) then
+  begin
+    ShowMessage('Preencha o campo de data inicial corretamente!');
+    Exit;
+  end;
+  if (edtDataFim.Text <> '  /  /    ') and (Pos(' ', edtDataFim.Text) > 0) then
+  begin
+    ShowMessage('Preencha o campo de data final corretamente!');
+    Exit;
+  end;
+
+  Filtro := Default(TFiltroOS);
+  Filtro.DataIni := StrToDateDef(edtDataIni.Text, 0);
+  Filtro.DataFim := StrToDateDef(edtDataFim.Text, 0);
+  Filtro.NumeroOS := StrToIntDef(edtNumOS.Text, 0);
+  if cbxStatus.ItemIndex > 0 then
+    Filtro.Status := cbxStatus.Text;
+  Filtro.NomeCliente := edtCliente.Text;
+  Filtro.ValorMin := StrToCurrDef(edtValorMin.Text, 0);
+  Filtro.ValorMax := StrToCurrDef(edtValorMax.Text, 0);
+  Filtro.Limite := StrToIntDef(edtLimite.Text, 50);
+
+  Service := TOrdemServicoService.Create;
+  try
+    Service.AplicarFiltro(dmPrincipal.qrListaOS, FSQLOriginal, Filtro,
+      'ORDER BY OS.DATA_ABERTURA DESC, OS.ID DESC');
+    dmPrincipal.qrListaOS.Open;
+  finally
+    Service.Free;
+  end;
 end;
 
 procedure TFrmPrincipal.btnInserirClick(Sender: TObject);
@@ -203,5 +234,6 @@ begin
 
   DBCtrlGrid.Canvas.FillRect(Rect(0, 0, DBCtrlGrid.PanelWidth, DBCtrlGrid.PanelHeight));
 end;
+
 
 end.
