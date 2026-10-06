@@ -49,7 +49,7 @@ implementation
 
 procedure TFrmCadastroCliente.btnAlterarClick(Sender: TObject);
 var
-  FCliente : TCliente;
+  Cliente : TCliente;
 begin
 
   if dmPrincipal.qrCliente.IsEmpty then
@@ -58,24 +58,24 @@ begin
     Exit;
   end;
 
-
+    Cliente := TCliente.Create;
   try
-    FCliente := TCliente.Create;
-    FCliente.Id := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
-    FCliente.Nome := dmPrincipal.qrCliente.FieldByName('NOME').AsString;
-    FCliente.Email := dmPrincipal.qrCliente.FieldByName('EMAIL').AsString;
-    FCliente.Telefone := dmPrincipal.qrCliente.FieldByName('TELEFONE').AsString;
-    FCliente.Documento := dmPrincipal.qrCliente.FieldByName('DOCUMENTO').AsString;
 
-    edtNome.Text := FCliente.Nome;
-    edtEmail.Text := FCliente.Email;
-    edtTelefone.Text := FCliente.Telefone;
-    mktCPF.Text := FCliente.Documento;
+    Cliente.Id := dmPrincipal.qrCliente.FieldByName('ID').AsInteger;
+    Cliente.Nome := dmPrincipal.qrCliente.FieldByName('NOME').AsString;
+    Cliente.Email := dmPrincipal.qrCliente.FieldByName('EMAIL').AsString;
+    Cliente.Telefone := dmPrincipal.qrCliente.FieldByName('TELEFONE').AsString;
+    Cliente.Documento := dmPrincipal.qrCliente.FieldByName('DOCUMENTO').AsString;
 
-    IDEdicao := FCliente.Id;
+    edtNome.Text := Cliente.Nome;
+    edtEmail.Text := Cliente.Email;
+    edtTelefone.Text := Cliente.Telefone;
+    mktCPF.Text := Cliente.Documento;
+
+    IDEdicao := Cliente.Id;
     btnSalvar.Caption := 'Atualizar';
   finally
-    FCliente.Free;
+    Cliente.Free;
   end;
 end;
 

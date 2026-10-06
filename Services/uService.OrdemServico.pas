@@ -422,7 +422,7 @@ begin
     Query.ParamByName('pValorMin').AsCurrency := Filtro.ValorMin;
   if Filtro.ValorMax > 0 then
     Query.ParamByName('pValorMax').AsCurrency := Filtro.ValorMax;
-    if Filtro.NumeroOS > 0 then
+  if Filtro.NumeroOS > 0 then
     Query.ParamByName('pNumeroOS').AsInteger := Filtro.NumeroOS;
 
   if Query.Params.FindParam('pLimite') <> nil then

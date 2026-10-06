@@ -13,11 +13,7 @@ type
     pnFiltros: TPanel;
     btnInserir: TButton;
     btnLocalizar: TButton;
-
-    // Componente de grelha de cartões
     ctrlGridOS: TDBCtrlGrid;
-
-    // Componentes visuais que ficarão DENTRO do painel base do ctrlGridOS (O seu "Cartão")
     txtNomeCliente: TDBText;
     txtStatusOS: TDBText;
     txtValorTotal: TDBText;
@@ -76,8 +72,6 @@ implementation
 procedure TFrmPrincipal.FormCreate(Sender: TObject);
 begin
   FSQLOriginal := dmPrincipal.qrListaOS.SQL.Text;
-
-  // O ctrlGridOS precisa de estar ligado ao DataSource, da mesma forma que a Grid antiga
   btnLocalizarClick(nil);
 end;
 
@@ -104,11 +98,7 @@ var
   Filtro: TFiltroOS;
   Service: TOrdemServicoService;
 begin
-  if (Filtro.DataIni > 0) and (Filtro.DataFim > 0) and (Filtro.DataIni > Filtro.DataFim) then
-  begin
-    ShowMessage('A data inicial não pode ser maior que a data final.');
-    Exit;
-  end;
+
 
   if (edtDataIni.Text <> '  /  /    ') and (Pos(' ', edtDataIni.Text) > 0) then
   begin
@@ -131,6 +121,12 @@ begin
   Filtro.ValorMin := StrToCurrDef(edtValorMin.Text, 0);
   Filtro.ValorMax := StrToCurrDef(edtValorMax.Text, 0);
   Filtro.Limite := StrToIntDef(edtLimite.Text, 50);
+
+  if (Filtro.DataIni > 0) and (Filtro.DataFim > 0) and (Filtro.DataIni > Filtro.DataFim) then
+  begin
+    ShowMessage('A data inicial não pode ser maior que a data final.');
+    Exit;
+  end;
 
   Service := TOrdemServicoService.Create;
   try
@@ -208,8 +204,8 @@ begin
     frmCadastroCliente.ShowModal;
   finally
     frmCadastroCliente.Free;
-  end
-
+  end;
+  btnLocalizarClick(nil);
 end;
 
 procedure TFrmPrincipal.btnDeletarCardClick(Sender: TObject);
