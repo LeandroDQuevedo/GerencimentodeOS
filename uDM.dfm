@@ -5107,4 +5107,77 @@ object dmPrincipal: TdmPrincipal
     Left = 24
     Top = 352
   end
+  object qrTotalizadores: TFDQuery
+    Connection = ConexaoBanco
+    SQL.Strings = (
+      'SELECT'#10'  '
+      
+        'SUM(CASE WHEN STATUS = :pAberta THEN 1 ELSE 0 END) AS ABERTAS,'#10' ' +
+        ' '
+      
+        'SUM(CASE WHEN STATUS = :pEmAndamento THEN 1 ELSE 0 END) AS EM_AN' +
+        'DAMENTO,'#10'  '
+      
+        'SUM(CASE WHEN STATUS = :pConcluida THEN 1 ELSE 0 END) AS CONCLUI' +
+        'DAS,'#10'  '
+      'SUM(CASE WHEN DATA_PREVISTA < CURRENT_DATE'#10'            '
+      
+        'AND STATUS IN (:pAberta, :pEmAndamento) THEN 1 ELSE 0 END) AS EM' +
+        '_ATRASO'
+      #10'FROM ORDEM_SERVICO')
+    Left = 96
+    Top = 408
+    ParamData = <
+      item
+        Name = 'PABERTA'
+        DataType = ftWideString
+        ParamType = ptInput
+        Size = 15
+      end
+      item
+        Name = 'PEMANDAMENTO'
+        DataType = ftWideString
+        ParamType = ptInput
+        Size = 15
+      end
+      item
+        Name = 'PCONCLUIDA'
+        DataType = ftWideString
+        ParamType = ptInput
+        Size = 15
+      end>
+    object qrTotalizadoresABERTAS: TLargeintField
+      AutoGenerateValue = arDefault
+      FieldName = 'ABERTAS'
+      Origin = 'ABERTAS'
+      ProviderFlags = []
+      ReadOnly = True
+    end
+    object qrTotalizadoresEM_ANDAMENTO: TLargeintField
+      AutoGenerateValue = arDefault
+      FieldName = 'EM_ANDAMENTO'
+      Origin = 'EM_ANDAMENTO'
+      ProviderFlags = []
+      ReadOnly = True
+    end
+    object qrTotalizadoresCONCLUIDAS: TLargeintField
+      AutoGenerateValue = arDefault
+      FieldName = 'CONCLUIDAS'
+      Origin = 'CONCLUIDAS'
+      ProviderFlags = []
+      ReadOnly = True
+    end
+    object qrTotalizadoresEM_ATRASO: TLargeintField
+      AutoGenerateValue = arDefault
+      FieldName = 'EM_ATRASO'
+      Origin = 'EM_ATRASO'
+      ProviderFlags = []
+      ReadOnly = True
+    end
+  end
+  object dsTotalizadores: TDataSource
+    DataSet = qrTotalizadores
+    Left = 96
+    Top = 352
+  end
 end

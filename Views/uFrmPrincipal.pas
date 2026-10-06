@@ -46,6 +46,21 @@ type
     txtNumeroOS: TDBText;
     Bevel1: TBevel;
     txtDataPrev: TDBText;
+    Panel2: TPanel;
+    lbTotal: TLabel;
+    txtTotalAberta: TDBText;
+    lbAbertas: TLabel;
+    lbEmAndamento: TLabel;
+    txtTotalAndamento: TDBText;
+    lbConcluidas: TLabel;
+    txtTotalConcluidas: TDBText;
+    lbEmAtraso: TLabel;
+    txtTotalAtraso: TDBText;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -57,8 +72,10 @@ type
     procedure btnClientesClick(Sender: TObject);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+
   private
     FSQLOriginal: string;
+    procedure AtualizarTotalizadores;
   public
   end;
 
@@ -99,7 +116,6 @@ var
   Service: TOrdemServicoService;
 begin
 
-
   if (edtDataIni.Text <> '  /  /    ') and (Pos(' ', edtDataIni.Text) > 0) then
   begin
     ShowMessage('Preencha o campo de data inicial corretamente!');
@@ -132,10 +148,12 @@ begin
   try
     Service.AplicarFiltro(dmPrincipal.qrListaOS, FSQLOriginal, Filtro,
       'ORDER BY OS.DATA_ABERTURA DESC, OS.ID DESC');
+
     dmPrincipal.qrListaOS.Open;
   finally
     Service.Free;
   end;
+  AtualizarTotalizadores;
 end;
 
 procedure TFrmPrincipal.btnInserirClick(Sender: TObject);
@@ -291,5 +309,13 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.AtualizarTotalizadores;
+begin
+  dmPrincipal.qrTotalizadores.Close;
+  dmPrincipal.qrTotalizadores.ParamByName('pAberta').AsString := STATUS_ABERTA;
+  dmPrincipal.qrTotalizadores.ParamByName('pEmAndamento').AsString := STATUS_EM_ANDAMENTO;
+  dmPrincipal.qrTotalizadores.ParamByName('pConcluida').AsString := STATUS_CONCLUIDA;
+  dmPrincipal.qrTotalizadores.Open;
+end;
 
 end.

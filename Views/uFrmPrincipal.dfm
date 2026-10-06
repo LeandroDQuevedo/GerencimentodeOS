@@ -23,7 +23,6 @@ object FrmPrincipal: TFrmPrincipal
     Height = 97
     Align = alTop
     TabOrder = 0
-    ExplicitLeft = 8
     DesignSize = (
       1107
       97)
@@ -117,7 +116,6 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 0
       OnClick = btnLocalizarClick
-      ExplicitLeft = 918
     end
     object edtDataFim: TMaskEdit
       Left = 437
@@ -189,15 +187,208 @@ object FrmPrincipal: TFrmPrincipal
       TextHint = 'Valor m'#237'nimo'
     end
     object edtLimite: TEdit
-      Left = 976
-      Top = 57
-      Width = 108
+      Left = 896
+      Top = 21
+      Width = 61
       Height = 21
       Alignment = taCenter
       Anchors = [akTop, akRight]
       NumbersOnly = True
       TabOrder = 8
       Text = '50'
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 58
+      Width = 1105
+      Height = 38
+      Align = alBottom
+      TabOrder = 9
+      ExplicitTop = 57
+      object Panel3: TPanel
+        Left = 498
+        Top = 1
+        Width = 131
+        Height = 36
+        Align = alLeft
+        TabOrder = 0
+        object lbEmAtraso: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 3
+          Width = 123
+          Height = 15
+          Margins.Top = 2
+          Margins.Bottom = 0
+          Align = alTop
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Em atraso:'
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ExplicitWidth = 129
+        end
+        object txtTotalAtraso: TDBText
+          Left = 1
+          Top = 18
+          Width = 129
+          Height = 17
+          Align = alClient
+          Alignment = taCenter
+          DataField = 'EM_ATRASO'
+          DataSource = dmPrincipal.dsTotalizadores
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitTop = 23
+          ExplicitHeight = 12
+        end
+      end
+      object Panel4: TPanel
+        Left = 367
+        Top = 1
+        Width = 131
+        Height = 36
+        Align = alLeft
+        TabOrder = 1
+        object lbConcluidas: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 3
+          Width = 123
+          Height = 15
+          Margins.Top = 2
+          Margins.Bottom = 0
+          Align = alTop
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Conclu'#237'das:'
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ExplicitWidth = 129
+        end
+        object txtTotalConcluidas: TDBText
+          Left = 1
+          Top = 18
+          Width = 129
+          Height = 17
+          Align = alClient
+          Alignment = taCenter
+          DataField = 'CONCLUIDAS'
+          DataSource = dmPrincipal.dsTotalizadores
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 120
+          ExplicitTop = 17
+          ExplicitWidth = 65
+        end
+      end
+      object Panel5: TPanel
+        Left = 236
+        Top = 1
+        Width = 131
+        Height = 36
+        Align = alLeft
+        TabOrder = 2
+        object txtTotalAndamento: TDBText
+          Left = 1
+          Top = 18
+          Width = 129
+          Height = 17
+          Align = alClient
+          Alignment = taCenter
+          DataField = 'EM_ANDAMENTO'
+          DataSource = dmPrincipal.dsTotalizadores
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 120
+          ExplicitTop = 16
+          ExplicitWidth = 65
+        end
+        object lbEmAndamento: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 3
+          Width = 123
+          Height = 15
+          Margins.Top = 2
+          Margins.Bottom = 0
+          Align = alTop
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Em andamento:'
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ExplicitWidth = 129
+        end
+      end
+      object Panel6: TPanel
+        Left = 105
+        Top = 1
+        Width = 131
+        Height = 36
+        Align = alLeft
+        TabOrder = 3
+        object lbAbertas: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 3
+          Width = 123
+          Height = 15
+          Margins.Top = 2
+          Margins.Bottom = 0
+          Align = alTop
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Abertas:'
+        end
+        object txtTotalAberta: TDBText
+          Left = 1
+          Top = 18
+          Width = 129
+          Height = 17
+          Align = alClient
+          Alignment = taCenter
+          DataField = 'ABERTAS'
+          DataSource = dmPrincipal.dsTotalizadores
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 94
+          ExplicitTop = 16
+          ExplicitWidth = 65
+        end
+      end
+      object Panel7: TPanel
+        Left = 1
+        Top = 1
+        Width = 104
+        Height = 36
+        Align = alLeft
+        TabOrder = 4
+        object lbTotal: TLabel
+          Left = 12
+          Top = 9
+          Width = 68
+          Height = 13
+          Alignment = taCenter
+          Caption = 'Totalizadores:'
+        end
+      end
     end
   end
   object pnBotoes: TPanel
@@ -207,9 +398,6 @@ object FrmPrincipal: TFrmPrincipal
     Height = 629
     Align = alRight
     TabOrder = 1
-    ExplicitLeft = 898
-    ExplicitTop = 57
-    ExplicitHeight = 609
     object btnInserir: TButton
       Left = 24
       Top = 40
@@ -264,9 +452,6 @@ object FrmPrincipal: TFrmPrincipal
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 2
-    ExplicitTop = 57
-    ExplicitWidth = 898
-    ExplicitHeight = 609
     object ctrlGridOS: TDBCtrlGrid
       Left = 1
       Top = 1
@@ -287,8 +472,6 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 0
       OnPaintPanel = ctrlGridOSPaintPanel
-      ExplicitWidth = 955
-      ExplicitHeight = 939
       object lbNomeCliente: TLabel
         Left = 7
         Top = 198
@@ -324,7 +507,7 @@ object FrmPrincipal: TFrmPrincipal
       end
       object txtStatusOS: TDBText
         Left = 0
-        Top = 6
+        Top = 5
         Width = 236
         Height = 28
         Alignment = taCenter

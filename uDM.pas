@@ -33,6 +33,12 @@ type
     qrClienteDATACADASTRO: TSQLTimeStampField;
     qrListaOSMINIATURA: TBlobField;
     qrListaOSDATA_PREVISTA: TDateField;
+    qrTotalizadores: TFDQuery;
+    dsTotalizadores: TDataSource;
+    qrTotalizadoresABERTAS: TLargeintField;
+    qrTotalizadoresEM_ANDAMENTO: TLargeintField;
+    qrTotalizadoresCONCLUIDAS: TLargeintField;
+    qrTotalizadoresEM_ATRASO: TLargeintField;
   private
     { Private declarations }
   public
