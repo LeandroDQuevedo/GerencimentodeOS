@@ -10,6 +10,7 @@ uses
   Vcl.VirtualImageList, Vcl.BaseImageCollection, Vcl.ImageCollection, Data.DB,
   FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
   FireDAC.DApt, FireDAC.Comp.DataSet, frxSmartMemo, frxExportCSV, frxClass,
+  System.IniFiles, Vcl.Forms, System.UITypes, uFrmConfigBanco,
   frxExportBaseDialog, frxExportPDF, frCoreClasses, frxDBSet;
 
 type
@@ -44,7 +45,6 @@ type
     frxDBRelatorioOS: TfrxDBDataset;
     RelatorioOS: TfrxReport;
     frxPDFExport: TfrxPDFExport;
-    frxCSVExport: TfrxCSVExport;
     qrRelatorioOSID: TIntegerField;
     qrRelatorioOSDATA_ABERTURA: TDateField;
     qrRelatorioOSDATA_PREVISTA: TDateField;
@@ -53,6 +53,7 @@ type
     qrRelatorioOSCLIENTE_NOME: TWideStringField;
     qrRelatorioOSEM_ATRASO: TIntegerField;
     qrTotalizadoresCANCELADAS: TLargeintField;
+    procedure ConexaoBancoBeforeConnect(Sender: TObject);
   private
     { Private declarations }
   public
@@ -69,5 +70,47 @@ implementation
 {$R *.dfm}
 
 
+
+procedure TdmPrincipal.ConexaoBancoBeforeConnect(Sender: TObject);
+  var
+    ArquivoINI: TIniFile;
+    CaminhoBanco: string;
+    UsernameBanco: string;
+    SenhaBanco: string;
+    frmConfigBanco: TFrmConfigBanco;
+  begin
+  ArquivoINI := TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'config.ini');
+  try
+    CaminhoBanco := ArquivoINI.ReadString('BANCO', 'Caminho', '');
+    UsernameBanco := ArquivoINI.ReadString('BANCO', 'Username', '');
+    SenhaBanco := ArquivoINI.ReadString('BANCO', 'Senha', '');
+
+    if (CaminhoBanco = '') or (UsernameBanco = '') or (SenhaBanco = '') or (not FileExists(CaminhoBanco)) then
+    begin
+      frmConfigBanco := TFrmConfigBanco.Create(nil);
+      try
+        if frmConfigBanco.ShowModal = mrOk then
+        begin
+          CaminhoBanco := ArquivoINI.ReadString('BANCO', 'Caminho', '');
+          UsernameBanco := ArquivoINI.ReadString('BANCO', 'Username', '');
+          SenhaBanco := ArquivoINI.ReadString('BANCO', 'Senha', '');
+        end
+        else
+        begin
+          Application.Terminate;
+          Abort;
+        end;
+      finally
+        frmConfigBanco.Free;
+      end;
+    end;
+
+    ConexaoBanco.Params.Values['Database'] := CaminhoBanco;
+    ConexaoBanco.Params.Values['User_Name'] := UsernameBanco;
+    ConexaoBanco.Params.Values['Password'] := SenhaBanco;
+  finally
+    ArquivoINI.Free;
+  end;
+end;
 
 end.

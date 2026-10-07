@@ -144,6 +144,7 @@ object FrmRelatorio: TFrmRelatorio
       Height = 25
       Caption = 'PDF'
       TabOrder = 1
+      OnClick = btnPDFClick
     end
     object btnCSV: TButton
       Left = 600
@@ -152,6 +153,13 @@ object FrmRelatorio: TFrmRelatorio
       Height = 25
       Caption = 'CSV'
       TabOrder = 2
+      OnClick = btnCSVClick
     end
+  end
+  object sdCSV: TSaveDialog
+    DefaultExt = 'csv'
+    Filter = 'Arquivo CSV (*.csv)|*.csv'
+    Left = 656
+    Top = 176
   end
 end

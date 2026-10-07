@@ -12,7 +12,8 @@ uses
   uFrmAlterarStatus in 'Views\uFrmAlterarStatus.pas' {FrmAlterarStatus},
   uService.Cliente in 'Services\uService.Cliente.pas',
   uFuncoes in 'Views\uFuncoes.pas',
-  uFrmRelatorio in 'Views\uFrmRelatorio.pas' {FrmRelatorio};
+  uFrmRelatorio in 'Views\uFrmRelatorio.pas' {FrmRelatorio},
+  uFrmConfigBanco in 'Views\uFrmConfigBanco.pas' {FrmConfigBanco};
 
 {$R *.res}
 

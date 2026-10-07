@@ -11,7 +11,7 @@ object dmPrincipal: TdmPrincipal
         'tabase\ORDENS.FDB'
       'CharacterSet=UTF8'
       'DriverID=FB')
-    Connected = True
+    BeforeConnect = ConexaoBancoBeforeConnect
     Left = 80
     Top = 48
   end
@@ -5199,7 +5199,6 @@ object dmPrincipal: TdmPrincipal
     Top = 352
   end
   object qrRelatorioOS: TFDQuery
-    Active = True
     Connection = ConexaoBanco
     FetchOptions.AssignedValues = [evMode]
     FetchOptions.Mode = fmAll
@@ -5252,34 +5251,6 @@ object dmPrincipal: TdmPrincipal
     DataSetOptions = []
     Left = 512
     Top = 80
-    FieldDefs = <
-      item
-        FieldName = 'ID'
-      end
-      item
-        FieldName = 'DATA_ABERTURA'
-        FieldType = fftDateTime
-      end
-      item
-        FieldName = 'DATA_PREVISTA'
-        FieldType = fftDateTime
-      end
-      item
-        FieldName = 'STATUS'
-        FieldType = fftString
-        Size = 15
-      end
-      item
-        FieldName = 'VALOR_TOTAL'
-      end
-      item
-        FieldName = 'CLIENTE_NOME'
-        FieldType = fftString
-        Size = 120
-      end
-      item
-        FieldName = 'EM_ATRASO'
-      end>
   end
   object RelatorioOS: TfrxReport
     Tag = 21650
@@ -5294,7 +5265,7 @@ object dmPrincipal: TdmPrincipal
     ReportOptions.CreateDate = 37871.995957488400000000
     ReportOptions.Description.Strings = (
       'This report shows how to use multiple groups.')
-    ReportOptions.LastChange = 46302.129664571760000000
+    ReportOptions.LastChange = 46302.133946319450000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -5319,8 +5290,8 @@ object dmPrincipal: TdmPrincipal
       PaperWidth = 210.000000000000000000
       PaperHeight = 297.000000000000000000
       PaperSize = 9
-      LeftMargin = 5.000000000000000000
-      RightMargin = 5.000000000000000000
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
       TopMargin = 5.000000000000000000
       BottomMargin = 5.000000000000000000
       Columns = 1
@@ -5340,7 +5311,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = [ftTop]
         Height = 41.574830000000000000
         Top = 434.645950000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         object Memo6: TfrxMemoView
           AllowVectorExport = True
           Width = 241.889607560000000000
@@ -5373,7 +5344,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = []
         Height = 49.133890000000000000
         Top = 18.897650000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         object Memo30: TfrxMemoView
           AllowVectorExport = True
           Width = 755.905511811024000000
@@ -5405,7 +5376,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = []
         Height = 26.456692910000000000
         Top = 90.708720000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         object Memo14: TfrxMemoView
           AllowVectorExport = True
           Top = 7.559060000000000000
@@ -5515,9 +5486,11 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = []
         Height = 26.456710000000000000
         Top = 222.992270000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         DataSet = frxDBRelatorioOS
         DataSetName = 'OS'
+        KeepFooter = True
+        KeepHeader = True
         RowCount = 0
         object Memo7: TfrxMemoView
           AllowVectorExport = True
@@ -5532,6 +5505,7 @@ object dmPrincipal: TdmPrincipal
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
+          Highlight.ApplyFont = False
           Highlight.Font.Charset = DEFAULT_CHARSET
           Highlight.Font.Color = clBlack
           Highlight.Font.Height = -13
@@ -5559,6 +5533,7 @@ object dmPrincipal: TdmPrincipal
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
+          Highlight.ApplyFont = False
           Highlight.Font.Charset = DEFAULT_CHARSET
           Highlight.Font.Color = clBlack
           Highlight.Font.Height = -13
@@ -5620,6 +5595,7 @@ object dmPrincipal: TdmPrincipal
           Font.Style = []
           Frame.Typ = []
           HAlign = haCenter
+          Highlight.ApplyFont = False
           Highlight.Font.Charset = DEFAULT_CHARSET
           Highlight.Font.Color = clBlack
           Highlight.Font.Height = -13
@@ -5650,6 +5626,7 @@ object dmPrincipal: TdmPrincipal
           Font.Style = []
           Frame.Typ = []
           HAlign = haRight
+          Highlight.ApplyFont = False
           Highlight.Font.Charset = DEFAULT_CHARSET
           Highlight.Font.Color = clBlack
           Highlight.Font.Height = -13
@@ -5685,7 +5662,7 @@ object dmPrincipal: TdmPrincipal
             item
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clRed
-              Font.Height = -13
+              Font.Height = -12
               Font.Name = 'Arial'
               Font.Style = []
               Condition = '<Line#> mod 2 = 0'
@@ -5697,7 +5674,7 @@ object dmPrincipal: TdmPrincipal
               ApplyFill = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clRed
-              Font.Height = -13
+              Font.Height = -12
               Font.Name = 'Arial'
               Font.Style = []
               Condition = '<OS."EM_ATRASO"> = 1'
@@ -5717,7 +5694,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = []
         Height = 21.677180000000000000
         Top = 177.637910000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         KeepWithData = False
         Condition = 'OS."STATUS"'
         ReprintOnNewPage = True
@@ -5748,7 +5725,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = [ftTop]
         Height = 41.574803150000000000
         Top = 272.126160000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         KeepWithData = False
         object Memo4: TfrxMemoView
           AllowVectorExport = True
@@ -5796,7 +5773,7 @@ object dmPrincipal: TdmPrincipal
         Frame.Typ = [ftTop]
         Height = 37.795300000000000000
         Top = 374.173470000000000000
-        Width = 755.906000000000000000
+        Width = 718.110700000000000000
         object Memo5: TfrxMemoView
           AllowVectorExport = True
           Left = 3.779530000000000000
@@ -5850,7 +5827,7 @@ object dmPrincipal: TdmPrincipal
     OverwritePrompt = False
     DataOnly = False
     InteractiveFormsFontSubset = 'A-Z,a-z,0-9,#43-#47 '
-    OpenAfterExport = False
+    OpenAfterExport = True
     PrintOptimized = False
     Outline = False
     Background = False
@@ -5870,20 +5847,6 @@ object dmPrincipal: TdmPrincipal
     PDFVersion = pv17
     PDFColorSpace = csDeviceRGB
     Left = 512
-    Top = 176
-  end
-  object frxCSVExport: TfrxCSVExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    Separator = ';'
-    OEMCodepage = False
-    UTF8 = False
-    OpenAfterExport = False
-    NoSysSymbols = True
-    ForcedQuotes = False
-    Left = 512
-    Top = 128
+    Top = 136
   end
 end

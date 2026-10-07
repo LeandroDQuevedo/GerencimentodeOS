@@ -431,7 +431,7 @@ begin
   if Filtro.Status <> '' then
     Query.ParamByName('pStatus').AsString := Filtro.Status;
   if Trim(Filtro.NomeCliente) <> '' then
-    Query.ParamByName('pNome').AsString := '%' + UpperCase(Trim(Filtro.NomeCliente)) + '%';
+    Query.ParamByName('pNome').AsString := '%' + AnsiUpperCase(Trim(Filtro.NomeCliente)) + '%';
   if Filtro.ValorMin > 0 then
     Query.ParamByName('pValorMin').AsCurrency := Filtro.ValorMin;
   if Filtro.ValorMax > 0 then
