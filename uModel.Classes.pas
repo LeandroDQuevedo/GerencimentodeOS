@@ -15,12 +15,13 @@ type
   TFiltroOS = record
     DataIni: TDate;
     DataFim: TDate;
-    Status: <tstring>;
+    Status: string;
     NomeCliente: string;
     ValorMin: Currency;
     ValorMax: Currency;
     Limite: Integer;
     NumeroOS: Integer;
+    ListaStatus: TArray<string>;
   end;
 
 

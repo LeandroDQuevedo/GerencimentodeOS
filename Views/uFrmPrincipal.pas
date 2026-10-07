@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uFuncoes, uFrmCadastroCliente,
-  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus,
+  Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus, uFrmRelatorio,
   Vcl.Mask;
 
 type
@@ -46,8 +46,7 @@ type
     txtNumeroOS: TDBText;
     Bevel1: TBevel;
     txtDataPrev: TDBText;
-    Panel2: TPanel;
-    lbTotal: TLabel;
+    Panel20: TPanel;
     txtTotalAberta: TDBText;
     lbAbertas: TLabel;
     lbEmAndamento: TLabel;
@@ -60,7 +59,15 @@ type
     Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
-    Panel7: TPanel;
+    btnRelatorio: TButton;
+    Panel2: TPanel;
+    lbCanceladas: TLabel;
+    txtTotalCanceladas: TDBText;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -72,6 +79,7 @@ type
     procedure btnClientesClick(Sender: TObject);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure btnRelatorioClick(Sender: TObject);
 
   private
     FSQLOriginal: string;
@@ -154,6 +162,18 @@ begin
     Service.Free;
   end;
   AtualizarTotalizadores;
+end;
+
+procedure TFrmPrincipal.btnRelatorioClick(Sender: TObject);
+var
+  frmRelatorio: TFrmRelatorio;
+begin
+  frmRelatorio := TFrmRelatorio.Create(nil);
+  try
+    frmRelatorio.ShowModal;
+  finally
+    frmRelatorio.Free;
+  end;
 end;
 
 procedure TFrmPrincipal.btnInserirClick(Sender: TObject);
@@ -315,6 +335,8 @@ begin
   dmPrincipal.qrTotalizadores.ParamByName('pAberta').AsString := STATUS_ABERTA;
   dmPrincipal.qrTotalizadores.ParamByName('pEmAndamento').AsString := STATUS_EM_ANDAMENTO;
   dmPrincipal.qrTotalizadores.ParamByName('pConcluida').AsString := STATUS_CONCLUIDA;
+  dmPrincipal.qrTotalizadores.ParamByName('pCancelada').AsString := STATUS_CANCELADA;
+
   dmPrincipal.qrTotalizadores.Open;
 end;
 

@@ -388,6 +388,9 @@ begin
 end;
 
 procedure TOrdemServicoService.AplicarFiltro(Query: TFDQuery; SQLBase: string; Filtro: TFiltroOS; OrdenarPor: string);
+var
+  i : integer;
+  ListaParametros: string;
 begin
   Query.Close;
   Query.SQL.Clear;
@@ -399,8 +402,19 @@ begin
     Query.SQL.Add('AND OS.DATA_ABERTURA <= :pDataFim');
   if Filtro.Status <> '' then
     Query.SQL.Add('AND OS.STATUS = :pStatus');
+  if Length(Filtro.ListaStatus) > 0 then
+  begin
+    ListaParametros := '';
+    for i := 0 to High(Filtro.ListaStatus) do
+    begin
+      if i > 0 then
+        ListaParametros := ListaParametros + ', ';
+      ListaParametros := ListaParametros + ':pStatus' + IntToStr(i);
+    end;
+    Query.SQL.Add('AND OS.STATUS IN (' + ListaParametros + ')');
+  end;
   if Trim(Filtro.NomeCliente) <> '' then
-    Query.SQL.Add('AND UPPER(C.NOME) LIKE :pNome');
+    Query.SQL.Add('AND UPPER(OS.CLIENTE_NOME) LIKE :pNome');
   if Filtro.ValorMin > 0 then
     Query.SQL.Add('AND OS.VALOR_TOTAL >= :pValorMin');
   if Filtro.ValorMax > 0 then
@@ -424,6 +438,8 @@ begin
     Query.ParamByName('pValorMax').AsCurrency := Filtro.ValorMax;
   if Filtro.NumeroOS > 0 then
     Query.ParamByName('pNumeroOS').AsInteger := Filtro.NumeroOS;
+  for i := 0 to High(Filtro.ListaStatus) do
+    Query.ParamByName('pStatus' + IntToStr(i)).AsString := Filtro.ListaStatus[i];
 
   if Query.Params.FindParam('pLimite') <> nil then
     Query.ParamByName('pLimite').AsInteger := Filtro.Limite;

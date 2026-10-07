@@ -197,21 +197,31 @@ object FrmPrincipal: TFrmPrincipal
       TabOrder = 8
       Text = '50'
     end
-    object Panel2: TPanel
+    object Panel20: TPanel
       Left = 1
       Top = 58
       Width = 1105
       Height = 38
       Align = alBottom
       TabOrder = 9
-      ExplicitTop = 57
       object Panel3: TPanel
-        Left = 498
+        Left = 525
         Top = 1
         Width = 131
         Height = 36
         Align = alLeft
         TabOrder = 0
+        ExplicitLeft = 498
+        object Label4: TLabel
+          Left = -6
+          Top = -1
+          Width = 137
+          Height = 20
+          AutoSize = False
+          Color = 4868863
+          ParentColor = False
+          Transparent = False
+        end
         object lbEmAtraso: TLabel
           AlignWithMargins = True
           Left = 4
@@ -224,6 +234,12 @@ object FrmPrincipal: TFrmPrincipal
           Alignment = taCenter
           AutoSize = False
           Caption = 'Em atraso:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
           ExplicitLeft = 1
           ExplicitTop = 1
           ExplicitWidth = 129
@@ -248,12 +264,23 @@ object FrmPrincipal: TFrmPrincipal
         end
       end
       object Panel4: TPanel
-        Left = 367
+        Left = 263
         Top = 1
         Width = 131
         Height = 36
         Align = alLeft
         TabOrder = 1
+        ExplicitLeft = 367
+        object Label3: TLabel
+          Left = -6
+          Top = -1
+          Width = 137
+          Height = 20
+          AutoSize = False
+          Color = 5283920
+          ParentColor = False
+          Transparent = False
+        end
         object lbConcluidas: TLabel
           AlignWithMargins = True
           Left = 4
@@ -266,6 +293,12 @@ object FrmPrincipal: TFrmPrincipal
           Alignment = taCenter
           AutoSize = False
           Caption = 'Conclu'#237'das:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
           ExplicitLeft = 1
           ExplicitTop = 1
           ExplicitWidth = 129
@@ -291,12 +324,13 @@ object FrmPrincipal: TFrmPrincipal
         end
       end
       object Panel5: TPanel
-        Left = 236
+        Left = 132
         Top = 1
         Width = 131
         Height = 36
         Align = alLeft
         TabOrder = 2
+        ExplicitLeft = 236
         object txtTotalAndamento: TDBText
           Left = 1
           Top = 18
@@ -316,6 +350,16 @@ object FrmPrincipal: TFrmPrincipal
           ExplicitTop = 16
           ExplicitWidth = 65
         end
+        object Label2: TLabel
+          Left = -1
+          Top = -1
+          Width = 137
+          Height = 20
+          AutoSize = False
+          Color = 33023
+          ParentColor = False
+          Transparent = False
+        end
         object lbEmAndamento: TLabel
           AlignWithMargins = True
           Left = 4
@@ -328,18 +372,35 @@ object FrmPrincipal: TFrmPrincipal
           Alignment = taCenter
           AutoSize = False
           Caption = 'Em andamento:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
           ExplicitLeft = 1
           ExplicitTop = 1
           ExplicitWidth = 129
         end
       end
       object Panel6: TPanel
-        Left = 105
+        Left = 1
         Top = 1
         Width = 131
         Height = 36
         Align = alLeft
         TabOrder = 3
+        ExplicitLeft = 105
+        object Label1: TLabel
+          Left = 0
+          Top = -1
+          Width = 130
+          Height = 20
+          AutoSize = False
+          Color = 12613680
+          ParentColor = False
+          Transparent = False
+        end
         object lbAbertas: TLabel
           AlignWithMargins = True
           Left = 4
@@ -352,6 +413,15 @@ object FrmPrincipal: TFrmPrincipal
           Alignment = taCenter
           AutoSize = False
           Caption = 'Abertas:'
+          Color = 12613680
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+          Transparent = True
         end
         object txtTotalAberta: TDBText
           Left = 1
@@ -373,20 +443,64 @@ object FrmPrincipal: TFrmPrincipal
           ExplicitWidth = 65
         end
       end
-      object Panel7: TPanel
-        Left = 1
+      object Panel2: TPanel
+        Left = 394
         Top = 1
-        Width = 104
+        Width = 131
         Height = 36
         Align = alLeft
         TabOrder = 4
-        object lbTotal: TLabel
-          Left = 12
-          Top = 9
-          Width = 68
-          Height = 13
+        ExplicitLeft = 498
+        object Label5: TLabel
+          Left = -8
+          Top = -1
+          Width = 140
+          Height = 20
+          AutoSize = False
+          Color = 9474192
+          ParentColor = False
+          Transparent = False
+        end
+        object lbCanceladas: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 3
+          Width = 123
+          Height = 15
+          Margins.Top = 2
+          Margins.Bottom = 0
+          Align = alTop
           Alignment = taCenter
-          Caption = 'Totalizadores:'
+          AutoSize = False
+          Caption = 'Canceladas:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 8
+          ExplicitTop = 11
+          ExplicitWidth = 96
+        end
+        object txtTotalCanceladas: TDBText
+          Left = 1
+          Top = 18
+          Width = 129
+          Height = 17
+          Align = alClient
+          Alignment = taCenter
+          DataField = 'CONCLUIDAS'
+          DataSource = dmPrincipal.dsTotalizadores
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = 2
+          ExplicitTop = 19
+          ExplicitWidth = 102
         end
       end
     end
@@ -443,6 +557,15 @@ object FrmPrincipal: TFrmPrincipal
       TabOrder = 4
       OnClick = btnClientesClick
     end
+    object btnRelatorio: TButton
+      Left = 24
+      Top = 272
+      Width = 75
+      Height = 25
+      Caption = 'Relat'#243'rio'
+      TabOrder = 5
+      OnClick = btnRelatorioClick
+    end
   end
   object Panel1: TPanel
     Left = 0
@@ -472,6 +595,8 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 0
       OnPaintPanel = ctrlGridOSPaintPanel
+      ExplicitLeft = -4
+      ExplicitTop = 4
       object lbNomeCliente: TLabel
         Left = 7
         Top = 198

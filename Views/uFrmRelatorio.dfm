@@ -11,6 +11,8 @@ object FrmRelatorio: TFrmRelatorio
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object lbDataIn: TLabel
@@ -47,7 +49,7 @@ object FrmRelatorio: TFrmRelatorio
   end
   object lbVlrMax: TLabel
     Left = 348
-    Top = 138
+    Top = 139
     Width = 24
     Height = 13
     Alignment = taCenter
@@ -81,21 +83,16 @@ object FrmRelatorio: TFrmRelatorio
     TabOrder = 2
     TextHint = 'Nome do cliente...'
   end
-  object CheckListBox1: TCheckListBox
+  object clbStatus: TCheckListBox
     Left = 307
     Top = 173
     Width = 97
     Height = 58
     ItemHeight = 13
-    Items.Strings = (
-      'Abertas'
-      'Em Andamento'
-      'Conclu'#237'das'
-      'Canceladas')
     TabOrder = 3
   end
   object edtValorMin: TEdit
-    Left = 218
+    Left = 220
     Top = 135
     Width = 119
     Height = 21
@@ -110,20 +107,19 @@ object FrmRelatorio: TFrmRelatorio
     TabOrder = 5
     TextHint = 'Valor m'#225'ximo'
   end
-  object Panel1: TPanel
+  object pbBotoes: TPanel
     Left = 0
     Top = 237
     Width = 713
     Height = 62
     Align = alBottom
-    Caption = 'i'
     Ctl3D = True
     DoubleBuffered = False
     ParentBackground = False
     ParentCtl3D = False
     ParentDoubleBuffered = False
     TabOrder = 6
-    object Label1: TLabel
+    object lbExportar: TLabel
       Left = 485
       Top = 7
       Width = 212
@@ -132,25 +128,26 @@ object FrmRelatorio: TFrmRelatorio
       AutoSize = False
       Caption = 'Exportar'
     end
-    object Button1: TButton
+    object btnGerar: TButton
       Left = 307
-      Top = 28
+      Top = 20
       Width = 97
       Height = 25
       Caption = 'Gerar'
       TabOrder = 0
+      OnClick = btnGerarClick
     end
-    object Button2: TButton
+    object btnPDF: TButton
       Left = 485
-      Top = 27
+      Top = 26
       Width = 97
       Height = 25
       Caption = 'PDF'
       TabOrder = 1
     end
-    object Button3: TButton
+    object btnCSV: TButton
       Left = 600
-      Top = 28
+      Top = 26
       Width = 97
       Height = 25
       Caption = 'CSV'

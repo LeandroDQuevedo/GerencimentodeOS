@@ -9,7 +9,8 @@ uses
   FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, System.ImageList, Vcl.ImgList,
   Vcl.VirtualImageList, Vcl.BaseImageCollection, Vcl.ImageCollection, Data.DB,
   FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
-  FireDAC.DApt, FireDAC.Comp.DataSet;
+  FireDAC.DApt, FireDAC.Comp.DataSet, frxSmartMemo, frxExportCSV, frxClass,
+  frxExportBaseDialog, frxExportPDF, frCoreClasses, frxDBSet;
 
 type
   TdmPrincipal = class(TDataModule)
@@ -39,6 +40,19 @@ type
     qrTotalizadoresEM_ANDAMENTO: TLargeintField;
     qrTotalizadoresCONCLUIDAS: TLargeintField;
     qrTotalizadoresEM_ATRASO: TLargeintField;
+    qrRelatorioOS: TFDQuery;
+    frxDBRelatorioOS: TfrxDBDataset;
+    RelatorioOS: TfrxReport;
+    frxPDFExport: TfrxPDFExport;
+    frxCSVExport: TfrxCSVExport;
+    qrRelatorioOSID: TIntegerField;
+    qrRelatorioOSDATA_ABERTURA: TDateField;
+    qrRelatorioOSDATA_PREVISTA: TDateField;
+    qrRelatorioOSSTATUS: TWideStringField;
+    qrRelatorioOSVALOR_TOTAL: TFMTBCDField;
+    qrRelatorioOSCLIENTE_NOME: TWideStringField;
+    qrRelatorioOSEM_ATRASO: TIntegerField;
+    qrTotalizadoresCANCELADAS: TLargeintField;
   private
     { Private declarations }
   public
