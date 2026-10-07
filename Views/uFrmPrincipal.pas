@@ -3,7 +3,7 @@ unit uFrmPrincipal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, uLog,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, uLog, uFrmHistoricoStatus,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uFuncoes, uFrmCadastroCliente,
   Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus, uFrmRelatorio,
   Vcl.Mask;
@@ -68,6 +68,7 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    btnHistorico: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure btnLocalizarClick(Sender: TObject);
@@ -80,6 +81,7 @@ type
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure btnRelatorioClick(Sender: TObject);
+    procedure btnHistoricoClick(Sender: TObject);
 
   private
     FSQLOriginal: string;
@@ -347,5 +349,25 @@ begin
   GravarLog('ERRO', E.ClassName + ': ' + E.Message);
   Application.ShowException(E);
 end;
+
+procedure TFrmPrincipal.btnHistoricoClick(Sender: TObject);
+var
+  frmHistorico: TFrmHistoricoStatus;
+begin
+  if dmPrincipal.qrListaOS.IsEmpty then
+  begin
+    ShowMessage('Selecione uma Ordem de Serviço.');
+    Exit;
+  end;
+
+  frmHistorico := TFrmHistoricoStatus.Create(nil);
+  try
+    frmHistorico.OrdemID := dmPrincipal.qrListaOS.FieldByName('ID').AsInteger;
+    frmHistorico.ShowModal;
+  finally
+    frmHistorico.Free;
+  end;
+end;
+
 
 end.

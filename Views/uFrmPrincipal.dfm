@@ -518,7 +518,7 @@ object FrmPrincipal: TFrmPrincipal
     end
     object btnAbrirCard: TButton
       Left = 24
-      Top = 88
+      Top = 71
       Width = 75
       Height = 25
       Caption = 'Alterar'
@@ -527,7 +527,7 @@ object FrmPrincipal: TFrmPrincipal
     end
     object btnDeletarCard: TButton
       Left = 24
-      Top = 136
+      Top = 102
       Width = 75
       Height = 25
       Caption = 'Excluir'
@@ -536,7 +536,7 @@ object FrmPrincipal: TFrmPrincipal
     end
     object btnAlterarStatus: TButton
       Left = 24
-      Top = 185
+      Top = 133
       Width = 75
       Height = 25
       Caption = 'Alterar Status'
@@ -545,7 +545,7 @@ object FrmPrincipal: TFrmPrincipal
     end
     object btnClientes: TButton
       Left = 24
-      Top = 232
+      Top = 164
       Width = 75
       Height = 25
       Caption = 'Clientes'
@@ -554,12 +554,21 @@ object FrmPrincipal: TFrmPrincipal
     end
     object btnRelatorio: TButton
       Left = 24
-      Top = 272
+      Top = 195
       Width = 75
       Height = 25
       Caption = 'Relat'#243'rio'
       TabOrder = 5
       OnClick = btnRelatorioClick
+    end
+    object btnHistorico: TButton
+      Left = 24
+      Top = 226
+      Width = 75
+      Height = 25
+      Caption = 'Auditoria'
+      TabOrder = 6
+      OnClick = btnHistoricoClick
     end
   end
   object Panel1: TPanel

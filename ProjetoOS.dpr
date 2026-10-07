@@ -14,7 +14,8 @@ uses
   uFuncoes in 'Views\uFuncoes.pas',
   uFrmRelatorio in 'Views\uFrmRelatorio.pas' {FrmRelatorio},
   uFrmConfigBanco in 'Views\uFrmConfigBanco.pas' {FrmConfigBanco},
-  uLog in 'uLog.pas';
+  uLog in 'uLog.pas',
+  uFrmHistoricoStatus in 'Views\uFrmHistoricoStatus.pas' {FrmHistoricoStatus};
 
 {$R *.res}
 
@@ -23,5 +24,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TdmPrincipal, dmPrincipal);
   Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmHistoricoStatus, FrmHistoricoStatus);
   Application.Run;
 end.

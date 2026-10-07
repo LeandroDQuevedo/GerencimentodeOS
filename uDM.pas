@@ -53,6 +53,12 @@ type
     qrRelatorioOSCLIENTE_NOME: TWideStringField;
     qrRelatorioOSEM_ATRASO: TIntegerField;
     qrTotalizadoresCANCELADAS: TLargeintField;
+    qrHistoricoStatus: TFDQuery;
+    dsHistoricoStatus: TDataSource;
+    qrHistoricoStatusDATA_HORA: TSQLTimeStampField;
+    qrHistoricoStatusSTATUS_ANTERIOR: TWideStringField;
+    qrHistoricoStatusSTATUS_NOVO: TWideStringField;
+    qrHistoricoStatusUSUARIO_SIMULADO: TWideStringField;
     procedure ConexaoBancoBeforeConnect(Sender: TObject);
   private
     { Private declarations }

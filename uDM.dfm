@@ -11,6 +11,7 @@ object dmPrincipal: TdmPrincipal
         'tabase\ORDENS.FDB'
       'CharacterSet=UTF8'
       'DriverID=FB')
+    Connected = True
     BeforeConnect = ConexaoBancoBeforeConnect
     Left = 80
     Top = 48
@@ -5848,5 +5849,51 @@ object dmPrincipal: TdmPrincipal
     PDFColorSpace = csDeviceRGB
     Left = 512
     Top = 136
+  end
+  object qrHistoricoStatus: TFDQuery
+    Connection = ConexaoBanco
+    SQL.Strings = (
+      'SELECT DATA_HORA, STATUS_ANTERIOR, STATUS_NOVO, USUARIO_SIMULADO'
+      'FROM STATUS_LOG'
+      'WHERE ORDEM_ID = :pOrdemID'
+      'ORDER BY DATA_HORA')
+    Left = 192
+    Top = 408
+    ParamData = <
+      item
+        Name = 'PORDEMID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object qrHistoricoStatusDATA_HORA: TSQLTimeStampField
+      DisplayLabel = 'Data/Hora'
+      FieldName = 'DATA_HORA'
+      Origin = 'DATA_HORA'
+      DisplayFormat = 'dd/mm/yyyy hh:nn'
+    end
+    object qrHistoricoStatusSTATUS_ANTERIOR: TWideStringField
+      DisplayLabel = 'Situa'#231#227'o anterior'
+      FieldName = 'STATUS_ANTERIOR'
+      Origin = 'STATUS_ANTERIOR'
+      Size = 15
+    end
+    object qrHistoricoStatusSTATUS_NOVO: TWideStringField
+      DisplayLabel = 'Nova situa'#231#227'o'
+      FieldName = 'STATUS_NOVO'
+      Origin = 'STATUS_NOVO'
+      Required = True
+      Size = 15
+    end
+    object qrHistoricoStatusUSUARIO_SIMULADO: TWideStringField
+      DisplayLabel = 'Usu'#225'rio'
+      FieldName = 'USUARIO_SIMULADO'
+      Origin = 'USUARIO_SIMULADO'
+      Size = 50
+    end
+  end
+  object dsHistoricoStatus: TDataSource
+    DataSet = qrHistoricoStatus
+    Left = 184
+    Top = 352
   end
 end
