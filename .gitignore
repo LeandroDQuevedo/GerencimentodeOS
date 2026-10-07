@@ -17,6 +17,7 @@ __recovery/
 *.tvsconfig
 *.vlb
 *.~*
+*.log
 
 # Banco de dados de testes (o script SQL de criação é que vai para o repositório)
 *.fdb

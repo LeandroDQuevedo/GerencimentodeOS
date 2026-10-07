@@ -3,7 +3,7 @@ unit uFrmPrincipal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, uLog,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, uModel.Classes, uFuncoes, uFrmCadastroCliente,
   Data.DB, Vcl.DBCGrids, Vcl.DBCtrls, uFrmCadastroOS, uDM, uService.OrdemServico, uFrmAlterarStatus, uFrmRelatorio,
   Vcl.Mask;
@@ -84,6 +84,7 @@ type
   private
     FSQLOriginal: string;
     procedure AtualizarTotalizadores;
+    procedure TratarExcecao(Sender: TObject; E: Exception);
   public
   end;
 
@@ -96,6 +97,7 @@ implementation
 
 procedure TFrmPrincipal.FormCreate(Sender: TObject);
 begin
+  Application.OnException := TratarExcecao;
   FSQLOriginal := dmPrincipal.qrListaOS.SQL.Text;
   btnLocalizarClick(nil);
 end;
@@ -338,6 +340,12 @@ begin
   dmPrincipal.qrTotalizadores.ParamByName('pCancelada').AsString := STATUS_CANCELADA;
 
   dmPrincipal.qrTotalizadores.Open;
+end;
+
+procedure TFrmPrincipal.TratarExcecao(Sender: TObject; E: Exception);
+begin
+  GravarLog('ERRO', E.ClassName + ': ' + E.Message);
+  Application.ShowException(E);
 end;
 
 end.

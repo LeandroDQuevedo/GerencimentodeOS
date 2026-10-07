@@ -2,7 +2,7 @@ unit uService.Cliente;
 
 interface
 uses
-  System.SysUtils, FireDAC.Comp.Client, Data.DB, uModel.Classes, System.Classes;
+  System.SysUtils, FireDAC.Comp.Client, Data.DB, uModel.Classes, System.Classes, uLog;
 
 type
   TClienteService = class
@@ -43,6 +43,7 @@ begin
       on Erro: Exception do
       begin
         Conexao.Rollback;
+        GravarLog('ERRO', 'Salvar OS: ' + Erro.Message);
         raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
       end;
     end;
@@ -70,6 +71,7 @@ begin
       on Erro: Exception do
       begin
         Conexao.Rollback;
+        GravarLog('ERRO', 'Salvar OS: ' + Erro.Message);
         raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
       end;
     end;
@@ -104,6 +106,7 @@ begin
       on Erro: Exception do
         begin
           Conexao.Rollback;
+          GravarLog('ERRO', 'Salvar OS: ' + Erro.Message);
           raise Exception.Create('Erro do Banco de Dados: ' + Erro.Message);
         end;
     end;

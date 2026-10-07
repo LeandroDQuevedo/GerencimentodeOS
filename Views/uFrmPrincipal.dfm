@@ -211,7 +211,6 @@ object FrmPrincipal: TFrmPrincipal
         Height = 36
         Align = alLeft
         TabOrder = 0
-        ExplicitLeft = 498
         object Label4: TLabel
           Left = -6
           Top = -1
@@ -270,7 +269,6 @@ object FrmPrincipal: TFrmPrincipal
         Height = 36
         Align = alLeft
         TabOrder = 1
-        ExplicitLeft = 367
         object Label3: TLabel
           Left = -6
           Top = -1
@@ -330,7 +328,6 @@ object FrmPrincipal: TFrmPrincipal
         Height = 36
         Align = alLeft
         TabOrder = 2
-        ExplicitLeft = 236
         object txtTotalAndamento: TDBText
           Left = 1
           Top = 18
@@ -390,7 +387,6 @@ object FrmPrincipal: TFrmPrincipal
         Height = 36
         Align = alLeft
         TabOrder = 3
-        ExplicitLeft = 105
         object Label1: TLabel
           Left = 0
           Top = -1
@@ -450,7 +446,6 @@ object FrmPrincipal: TFrmPrincipal
         Height = 36
         Align = alLeft
         TabOrder = 4
-        ExplicitLeft = 498
         object Label5: TLabel
           Left = -8
           Top = -1
@@ -595,8 +590,6 @@ object FrmPrincipal: TFrmPrincipal
       ParentFont = False
       TabOrder = 0
       OnPaintPanel = ctrlGridOSPaintPanel
-      ExplicitLeft = -4
-      ExplicitTop = 4
       object lbNomeCliente: TLabel
         Left = 7
         Top = 198

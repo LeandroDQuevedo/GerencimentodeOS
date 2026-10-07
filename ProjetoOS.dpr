@@ -13,7 +13,8 @@ uses
   uService.Cliente in 'Services\uService.Cliente.pas',
   uFuncoes in 'Views\uFuncoes.pas',
   uFrmRelatorio in 'Views\uFrmRelatorio.pas' {FrmRelatorio},
-  uFrmConfigBanco in 'Views\uFrmConfigBanco.pas' {FrmConfigBanco};
+  uFrmConfigBanco in 'Views\uFrmConfigBanco.pas' {FrmConfigBanco},
+  uLog in 'uLog.pas';
 
 {$R *.res}
 
