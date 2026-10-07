@@ -5292,9 +5292,7 @@ object dmPrincipal: TdmPrincipal
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 37871.995957488400000000
-    ReportOptions.Description.Strings = (
-      'This report shows how to use multiple groups.')
-    ReportOptions.LastChange = 46302.210407673610000000
+    ReportOptions.LastChange = 46302.222493449070000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
