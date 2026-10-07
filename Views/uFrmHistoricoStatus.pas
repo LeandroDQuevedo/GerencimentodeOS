@@ -29,12 +29,6 @@ implementation
 
 {$R *.dfm}
 
-procedure TFrmHistoricoStatus.FormClose(Sender: TObject;
-  var Action: TCloseAction);
-begin
-
-end;
-
 procedure TFrmHistoricoStatus.FormShow(Sender: TObject);
 begin
   Caption := 'Histórico de situações - OS nº ' + IntToStr(OrdemID);

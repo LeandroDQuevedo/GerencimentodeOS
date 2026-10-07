@@ -5252,6 +5252,34 @@ object dmPrincipal: TdmPrincipal
     DataSetOptions = []
     Left = 512
     Top = 80
+    FieldDefs = <
+      item
+        FieldName = 'ID'
+      end
+      item
+        FieldName = 'DATA_ABERTURA'
+        FieldType = fftDateTime
+      end
+      item
+        FieldName = 'DATA_PREVISTA'
+        FieldType = fftDateTime
+      end
+      item
+        FieldName = 'STATUS'
+        FieldType = fftString
+        Size = 15
+      end
+      item
+        FieldName = 'VALOR_TOTAL'
+      end
+      item
+        FieldName = 'CLIENTE_NOME'
+        FieldType = fftString
+        Size = 120
+      end
+      item
+        FieldName = 'EM_ATRASO'
+      end>
   end
   object RelatorioOS: TfrxReport
     Tag = 21650
@@ -5266,7 +5294,7 @@ object dmPrincipal: TdmPrincipal
     ReportOptions.CreateDate = 37871.995957488400000000
     ReportOptions.Description.Strings = (
       'This report shows how to use multiple groups.')
-    ReportOptions.LastChange = 46302.133946319450000000
+    ReportOptions.LastChange = 46302.210407673610000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'

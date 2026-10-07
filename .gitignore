@@ -22,3 +22,4 @@ __recovery/
 # Banco de dados de testes (o script SQL de criação é que vai para o repositório)
 *.fdb
 *.FDB
+!Database/ORDENS_DEMO.FDB
